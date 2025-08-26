@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+  <h3>Graph Test</h3>
+  {{ graph|safe }}
+
+  <h3>📊 Stock Trend</h3>
+{{ graph_stock|safe }}
+
+<h3>📊 SIP Trend</h3>
+{{ graph_sip|safe }}
+
+{% endblock %}

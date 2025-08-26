@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - My Site{% endblock %}
+
+{% block content %}
+
+ 
+  <!-- Buttons -->
+  <div class="row mb-4">
+    <div class="col-md-6 text-center mb-2">
+      <button class="btn btn-success w-75" data-bs-toggle="modal" data-bs-target="#addSIPModal">➕ Add SIP Investment</button>
+    </div>
+    <div class="col-md-6 text-center mb-2">
+      <button class="btn btn-primary w-75" data-bs-toggle="modal" data-bs-target="#addStockModal">➕ Add Stock Investment</button>
+    </div>
+  </div>
+
+  <!-- Search and Export -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <input type="text" class="form-control w-25" placeholder="🔍 Search..." />
+    <div>
+      <button class="btn btn-outline-secondary btn-sm me-2"><i class="bi bi-file-earmark-excel"></i> Excel</button>
+      <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-file-earmark-pdf"></i> PDF</button>
+    </div>
+  </div>
+
+  <!-- Stock Summary -->
+<div class="card shadow mb-4">
+  <div class="card-header bg-secondary text-white fw-bold d-flex justify-content-between">
+    <span>💹 Stock Summary</span>
+    <div>
+      
+      <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#updateStockModal">✏️ Update Existing</button>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-bordered text-center">
+        <thead class="table-light">
+          <tr>
+            <th>Stock Name</th>
+            <th>Quantity</th>
+            <th>Buy Price</th>
+            <th>Current Price</th>
+            <th>Total Investment</th>
+            <th>Current Value</th>
+            <th>Profit/Loss</th>
+             <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="stock_table">
+          {% for stock in stocks %}
+            <tr>
+              <td>{{ stock.stock_name }}</td>
+              <td>{{ stock.quantity }}</td>
+              <td>{{ stock.buy_price }}</td>
+              <td>{{ stock.current_price }}</td>
+              <td>{{ stock.total_investment }}</td>
+              <td>{{ stock.current_value }}</td>
+              <td>
+                {% if stock.profit_loss >= 0 %}
+                  <span style="color:green;">+{{ stock.profit_loss }}</span>
+                {% else %}
+                  <span style="color:red;">{{ stock.profit_loss }}</span>
+                {% endif %}
+              </td>
+              <td>
+  <form method="post" style="display:inline;">
+    {% csrf_token %}
+    <input type="hidden" name="stock_id" value="{{ stock.id }}">
+    <button type="submit" name="delete_stock" class="btn btn-danger btn-sm">Delete</button>
+  </form>
+</td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="7">No stocks added yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+  <!-- SIP Summary -->
+<div class="card shadow mb-4">
+  <div class="card-header bg-secondary text-white fw-bold d-flex justify-content-between">
+    <span>💰 SIP Summary</span>
+    <div>
+      
+      <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#updateSIPModal">✏️ Update Existing</button>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-bordered text-center">
+        <thead class="table-light">
+          <tr>
+            <th>SIP Name</th>
+            <th>Monthly Amount</th>
+            <th>Due Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="sip_table">
+          {% for sip in sips %}
+            <tr>
+              <td>{{ sip.sip_name }}</td>
+              <td>{{ sip.monthly_amount }}</td>
+              <td>{{ sip.due_date }}</td>
+              <td>
+                <form method="post" style="display:inline;">
+                  {% csrf_token %}
+                  <input type="hidden" name="sip_id" value="{{ sip.id }}">
+                  <button type="submit" name="delete_sip" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="4">No SIPs added yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Add SIP -->
+<div class="modal fade" id="addSIPModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title">➕ Add SIP Investment</h5>
+        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post">
+          {% csrf_token %}
+          {{ sip_form.as_p }}
+          <button type="submit" name="add_sip" class="btn btn-success w-100">Add SIP</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Update SIP -->
+<div class="modal fade" id="updateSIPModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-warning text-dark">
+        <h5 class="modal-title">✏️ Update Existing SIP</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post">
+          {% csrf_token %}
+          {{ update_sip_form.as_p }}
+          <div id="sipDetails" class="alert alert-info mt-2 d-none"></div>
+          <button type="submit" name="update_sip" class="btn btn-warning w-100">Update SIP</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Add Stock -->
+<div class="modal fade" id="addStockModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">➕ Add Stock Investment</h5>
+        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post">
+          {% csrf_token %}
+          {{ stock_form.as_p }}
+          <button type="submit" name="add_stock" class="btn btn-primary w-100">Add Stock</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Update Existing Stock -->
+<div class="modal fade" id="updateStockModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-warning text-dark">
+        <h5 class="modal-title">✏️ Update Existing Stock</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post">
+          {% csrf_token %}
+          {{ update_stock_form.as_p }}
+          <div id="stockDetails" class="alert alert-info mt-2 d-none"></div>
+          <button type="submit" name="update_stock" class="btn btn-warning w-100">Update Stock</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script>
+    window.addEventListener("load", () => {
+      document.getElementById("pageAlert").style.display = "flex";
+    });
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+  const stockSelect = document.getElementById("id_stock");
+  const stockDetailsDiv = document.getElementById("stockDetails");
+
+  if (stockSelect) {
+    stockSelect.addEventListener("change", function () {
+      const stockId = this.value;
+      if (stockId) {
+        fetch(`/get-stock-details/${stockId}/`)
+          .then(response => response.json())
+          .then(data => {
+            stockDetailsDiv.classList.remove("d-none");
+            stockDetailsDiv.innerHTML = `
+              <strong>Current Quantity:</strong> ${data.quantity}<br>
+              <strong>Current Buy Price:</strong> ${data.buy_price}
+            `;
+          });
+      } else {
+        stockDetailsDiv.classList.add("d-none");
+      }
+    });
+  }
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const sipSelect = document.getElementById("id_sip");
+  const sipDetailsDiv = document.getElementById("sipDetails");
+
+  if (sipSelect) {
+    sipSelect.addEventListener("change", function () {
+      const sipId = this.value;
+      if (sipId) {
+        fetch(`/get-sip-details/${sipId}/`)
+          .then(response => response.json())
+          .then(data => {
+            sipDetailsDiv.classList.remove("d-none");
+            sipDetailsDiv.innerHTML = `
+              <strong>Current Monthly Amount:</strong> ${data.monthly_amount}<br>
+              <strong>Current Due Date:</strong> ${data.due_date}
+            `;
+          });
+      } else {
+        sipDetailsDiv.classList.add("d-none");
+      }
+    });
+  }
+});
+
+   
+  </script>
+
+{% endblock %}

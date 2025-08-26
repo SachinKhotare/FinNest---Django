@@ -1,0 +1,320 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Dashboard{% endblock %}</title>
+
+  <!-- Bootstrap CSS & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6f8;
+      display: flex;
+    }
+    .sidebar {
+      width: 220px;
+      height: 100vh;
+      background: linear-gradient(135deg, #1d3557, #457b9d);
+      color: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 20px 15px;
+    }
+    .sidebar h2 { margin-bottom: 30px; text-align: center; font-size: 22px; }
+   .nav-tabs .nav-link.active {
+            font-weight: bold;
+        }
+
+        .category-card {
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .category-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .category-icon {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .form-section {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border: 1px solid #dee2e6;
+        }
+
+
+        .month-title {
+            font-size: 1.2rem;
+            color: #0d6efd;
+        }
+
+        .high-expense {
+            background-color: #ffe5e5 !important;
+            font-weight: bold;
+        }
+
+        .filter-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .summary-card {
+            border-radius: 10px;
+            padding: 15px;
+            background: #ffffff;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+    .side-link
+    {
+      display: block;
+      padding: 12px 15px;
+      margin: 10px 0;
+      color: #ecf0f1;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+    .side-link:hover { background-color: rgba(255, 255, 255, 0.1); }
+
+    .main-wrapper {
+      margin-left: 220px;
+      width: calc(100% - 220px);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .header {
+      background: #ffffff;
+      padding: 15px 30px;
+      border-bottom: 1px solid #ddd;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      font-size: 18px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer {
+      background: #ffffff;
+      color: #777;
+      padding: 15px 30px;
+      text-align: center;
+      border-top: 1px solid #ddd;
+      font-size: 14px;
+    }
+     .cancel-btn {
+      color: #dc3545;
+      font-weight: 600;
+      border: none;
+      background: none;
+    }
+
+    .cancel-btn:hover {
+      text-decoration: underline;
+    }
+    .main-content { flex: 1; padding: 30px; }
+    .info-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .info-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      transition: transform 0.3s ease;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+    .info-card:hover { transform: translateY(-5px); }
+    .icon-circle {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: bold;
+      color: white;
+    }
+    .alert .icon-circle { background: #e74c3c; }
+    .notification .icon-circle { background: #f39c12; }
+    .suggestion .icon-circle { background: #27ae60; }
+    .info-type { font-size: 18px; font-weight: 600; color: #333; }
+    .info-message { font-size: 15px; color: #555; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        text-align: center;
+      }
+      .main-wrapper {
+        margin-left: 0;
+        width: 100%;
+      }
+      .header, .footer {
+        padding: 15px;
+        text-align: center;
+        flex-direction: column;
+      }
+    }
+
+    /* Popup Alert Modal */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    .popup-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      max-width: 400px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      animation: fadeInUp 0.4s ease-out;
+    }
+    .popup-box h4 {
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+ <!-- Toast Container -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 2000"></div>
+
+  <div class="sidebar">
+    <h2>FinNest</h2>
+    <a href="#" class="side-link">🏠 Dashboard</a>
+    <a href="{% url 'expenses' %}" class="side-link">💸 Expenses</a>
+    <a href="{% url 'owner-rental' %}" class="side-link">🏠 Rentals</a>
+    <a href="{% url 'investment-Final' %}" class="side-link">📊 Investments</a>
+    <a href="{% url 'Add-On Final' %}" class="side-link">🧠 Add-On</a>
+    <a href="{% url 'dashboard_view' %}" class="side-link">🚪 Logout</a>
+  </div>
+
+  <div class="main-wrapper">
+    <div class="header">
+      <span>Welcome back,👋 {{user_data.username}}</span>
+      <div>
+        <button class="btn btn-outline-dark btn-sm" data-bs-toggle="offcanvas" data-bs-target="#userSidebar">
+          <i class="bi bi-person-circle"></i>
+        </button>
+        <button class="btn btn-outline-dark btn-sm ms-2" data-bs-toggle="offcanvas" data-bs-target="#notificationSidebar">
+          <i class="bi bi-bell-fill"></i>
+        </button>
+      </div>
+    </div>
+   <main class="main-content" id="main-content">
+  {% block content %}
+  {% endblock %}
+</main>
+    <div class="footer">&copy; 2025 FinNest. All rights reserved.</div>
+  </div>
+
+  <!-- Sidebar: User Profile -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="userSidebar">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title">User Menu</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+      <button class="btn btn-outline-primary w-100 mb-2" data-bs-toggle="modal" data-bs-target="#profileModal">
+        <i class="bi bi-person-badge"></i> View Profile
+      </button>
+      <button class="btn btn-outline-primary w-100 mb-2">
+        <i class="bi bi-key"></i> Change Password
+      </button>
+      <button class="btn btn-outline-danger w-100 mb-2">
+        <i class="bi bi-box-arrow-right"></i> Logout
+      </button>
+    </div>
+  </div>
+
+  <!-- Sidebar: Notifications & Suggestions -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="notificationSidebar">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title">Notifications & Suggestions</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="alert alert-warning">⚠️ Your electricity bill is due tomorrow.</div>
+      <div class="alert alert-info">🔔 You received ₹2,000 from tenant Ramesh.</div>
+      <div class="alert alert-success">💡 Consider setting up an emergency fund for financial stability.</div>
+    </div>
+  </div>
+
+  <!-- Modal: Profile -->
+  <div class="modal fade" id="profileModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Tenant Profile</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="list-group">
+            <li class="list-group-item"><strong>Name:</strong> {{user_data.full_name}}</li>
+            <li class="list-group-item"><strong>Mobile No:</strong> {{user_data.mobile_no}}</li>
+            <li class="list-group-item"><strong>Address:</strong> {{user_data.address}}</li>
+            <li class="list-group-item"><strong>Birth Date:</strong> {{user_data.date_of_birth}}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+</body>
+</html>

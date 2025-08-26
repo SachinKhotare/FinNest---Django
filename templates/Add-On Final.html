@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - My Site{% endblock %}
+
+{% block content %}
+
+  <!-- Alert Popup -->
+  <div id="pageAlert" class="popup-overlay" style="display: none;">
+    <div class="popup-box">
+      <h4>🔔 Welcome to FinNest!</h4>
+      <p>Stay informed with your latest alerts and suggestions.</p>
+      <button class="btn btn-primary mt-3" onclick="dismissPopup()">Dismiss</button>
+    </div>
+  </div>
+
+
+<!-- SAVINGS GOAL TRACKER -->
+    <section class="mb-5">
+      <h4 class="mb-3">🎯 Savings Goal Tracker</h4>
+      <div class="card mb-4 p-4">
+        <form id="goalForm" class="row g-3">
+          <div class="col-md-4">
+            <input type="text" class="form-control" id="goalName" placeholder="Goal Name (e.g., Bike)" required />
+          </div>
+          <div class="col-md-3">
+            <input type="number" class="form-control" id="targetAmount" placeholder="Target Amount (₹)" required />
+          </div>
+          <div class="col-md-3">
+            <input type="number" class="form-control" id="savedAmount" placeholder="Amount Saved (₹)" required />
+          </div>
+          <div class="col-md-2 d-grid">
+            <button type="submit" class="btn btn-success">Add Goal</button>
+          </div>
+        </form>
+      </div>
+      <div class="table-container table-responsive p-3">
+        <table class="table align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Goal</th>
+              <th>Saved / Target</th>
+              <th>Progress</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="goalTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SUBSCRIPTION MANAGER -->
+    <section>
+      <h4 class="mb-3">📦 Subscription & Auto-Debit Manager</h4>
+      <div class="card p-4 mb-4">
+        <form id="subscriptionForm" class="row g-3">
+          <div class="col-md-4">
+            <input type="text" class="form-control" id="subName" required placeholder="Subscription Name" />
+          </div>
+          <div class="col-md-3">
+            <input type="number" class="form-control" id="subAmount" required min="1" placeholder="Amount (₹)" />
+          </div>
+          <div class="col-md-3">
+            <input type="date" class="form-control" id="subRenewal" required />
+          </div>
+          <div class="col-md-2 d-grid">
+            <button type="submit" class="btn btn-primary">Add</button>
+          </div>
+        </form>
+      </div>
+      <div class="card p-3">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle text-center">
+            <thead class="table-light">
+              <tr>
+                <th>Name</th>
+                <th>Amount (₹)</th>
+                <th>Renewal Date</th>
+                <th>Days Left</th>
+                <th>Reminder</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="subscriptionsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  
+
+  <script>
+    // SAVINGS GOAL TRACKER
+    const goalForm = document.getElementById('goalForm');
+    const goalTableBody = document.getElementById('goalTableBody');
+    const dummyGoals = [
+      { name: '📱 New iPhone', target: 60000, saved: 60000 },
+      { name: '🌴 Thailand Trip', target: 100000, saved: 50000 },
+      { name: '🚗 Car Down Payment', target: 150000, saved: 120000 },
+      { name: '🎓 Education Fund', target: 100000, saved: 25000 }
+    ];
+
+    function getProgressColor(percentage) {
+      if (percentage >= 90) return 'success';
+      if (percentage >= 50) return 'warning';
+      return 'danger';
+    }
+
+    function createGoalRow(name, saved, target) {
+      const percentage = Math.round((saved / target) * 100);
+      const color = getProgressColor(percentage);
+      const statusMsg = percentage >= 100 ? '🎉 Goal Achieved!' : `🏆 ${percentage}% completed`;
+
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td><strong>${name}</strong></td>
+        <td>₹${saved.toLocaleString()} / ₹${target.toLocaleString()}</td>
+        <td><div class="progress"><div class="progress-bar bg-${color}" role="progressbar" style="width: ${percentage}%;">${percentage}%</div></div></td>
+        <td><span class="message">${statusMsg}</span></td>
+      `;
+      goalTableBody.appendChild(row);
+    }
+
+    goalForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('goalName').value.trim();
+      const target = parseFloat(document.getElementById('targetAmount').value);
+      const saved = parseFloat(document.getElementById('savedAmount').value);
+      if (!name || saved > target || target <= 0 || saved < 0) {
+        alert("Please enter valid goal details.");
+        return;
+      }
+      createGoalRow(name, saved, target);
+      goalForm.reset();
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      dummyGoals.forEach(goal => createGoalRow(goal.name, goal.saved, goal.target));
+      renderTable();
+    });
+
+    // SUBSCRIPTION MANAGER
+    const subscriptions = [
+      { name: "Netflix", amount: 499, currency: "₹", nextRenewal: "2025-08-10", remind: true },
+      { name: "Disney+ Hotstar", amount: 1499, currency: "₹", nextRenewal: "2025-08-15", remind: false },
+      { name: "Zomato Pro", amount: 399, currency: "₹", nextRenewal: "2025-08-25", remind: true },
+      { name: "Gym Membership", amount: 1200, currency: "₹", nextRenewal: "2025-08-20", remind: true }
+    ];
+
+    function daysUntil(dateStr) {
+      const today = new Date();
+      const date = new Date(dateStr);
+      const diffTime = date - today;
+      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById("subscriptionsTableBody");
+      tbody.innerHTML = "";
+
+      subscriptions.forEach((sub, idx) => {
+        const daysLeft = daysUntil(sub.nextRenewal);
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${sub.name}</td>
+          <td><strong>${sub.currency}${sub.amount}</strong></td>
+          <td>${sub.nextRenewal}</td>
+          <td><span class="countdown">${daysLeft} day${daysLeft !== 1 ? 's' : ''}</span></td>
+          <td><input type="checkbox" class="form-check-input" id="reminder${idx}" ${sub.remind ? 'checked' : ''} /></td>
+          <td><button class="cancel-btn" id="cancel${idx}">Cancel</button></td>
+        `;
+        row.querySelector(`#reminder${idx}`).addEventListener("change", (e) => {
+          subscriptions[idx].remind = e.target.checked;
+          alert(`${sub.name} reminder turned ${e.target.checked ? "ON" : "OFF"}`);
+        });
+        row.querySelector(`#cancel${idx}`).addEventListener("click", () => {
+          const confirmCancel = confirm(`Cancel subscription for ${sub.name}?`);
+          if (confirmCancel) alert(`${sub.name} cancellation requested.`);
+        });
+        tbody.appendChild(row);
+      });
+    }
+
+    document.getElementById("subscriptionForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const name = document.getElementById("subName").value.trim();
+      const amount = parseFloat(document.getElementById("subAmount").value);
+      const renewal = document.getElementById("subRenewal").value;
+      if (!name || !amount || !renewal) {
+        alert("Please fill all fields correctly.");
+        return;
+      }
+      subscriptions.push({ name, amount, currency: "₹", nextRenewal: renewal, remind: true });
+      this.reset();
+      renderTable();
+    });
+ 
+    function loadPage(page) {
+    $("#main-content").load(page);
+  }
+
+
+
+    window.addEventListener("load", () => {
+      document.getElementById("pageAlert").style.display = "flex";
+    });
+
+    function dismissPopup() {
+      const popup = document.getElementById("pageAlert");
+      popup.style.display = "none";
+    }
+  </script>
+
+{% endblock %}

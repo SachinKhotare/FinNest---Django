@@ -1,0 +1,480 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - My Site{% endblock %}
+
+{% block content %}   
+   <div class="container py-4">
+        <h2 class="mb-4 text-center">💼 Personal Finance Manager</h2>
+
+        <!-- Comparison Cards -->
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h6>Current Month</h6>
+                        <h4 class="text-primary">₹{{ current_month_total }}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h6>Overall Total</h6>
+                        <h4 class="text-success">₹{{ overall_total }}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h6>% of Total This Month</h6>
+                        <h4 class="text-warning">{{ percentage_month|floatformat:2 }}%</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <ul class="nav nav-tabs mt-4 mb-3" id="financeTabs" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" id="expenses-tab" data-bs-toggle="tab" data-bs-target="#expenses"
+                    type="button">Expenses</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="income-tab" data-bs-toggle="tab" data-bs-target="#income"
+                    type="button">Income</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="transfer-tab" data-bs-toggle="tab" data-bs-target="#transfer"
+                    type="button">Transfers</button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+
+            <!-- Expenses Tab -->
+            <div class="tab-pane fade show active" id="expenses" role="tabpanel">
+                <div class="row row-cols-2 row-cols-md-4 g-3">
+                    <div class="col">
+                        <div class="card bg-danger category-card" onclick="toggleForm('form-expense-food')">
+                            <div class="category-icon">🍔</div>
+                            <div>Food</div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card bg-primary category-card" onclick="toggleForm('form-expense-travel')">
+                            <div class="category-icon">✈️</div>
+                            <div>Travel</div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card bg-warning text-dark category-card" onclick="toggleForm('form-expense-rent')">
+                            <div class="category-icon">🏠</div>
+                            <div>Rent</div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card bg-success category-card" onclick="toggleForm('form-expense-entertainment')">
+                            <div class="category-icon">🎬</div>
+                            <div>Entertainment</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expense Forms -->
+                <div id="form-expense-food" class="form-section" style="display: none;">
+                    <h5>🍔 Add Expense - Food</h5>
+                    <form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="transaction_type" value="Expense">
+    <input type="hidden" name="category" value="Food">
+
+    <input type="number" name="amount" class="form-control mb-2" placeholder="Amount (₹)" required>
+    <input type="date" name="date" class="form-control mb-2" required>
+    <input type="text" name="note" class="form-control mb-2" placeholder="Note">
+    <button type="submit" class="btn btn-danger w-100">Save Expense</button>
+</form>
+                </div>
+
+                <div id="form-expense-travel" class="form-section" style="display: none;">
+                    <h5>✈️ Add Expense - Travel</h5>
+                   <form method="post">
+    {% csrf_token %}
+    
+    <input type="hidden" name="transaction_type" value="Expense">
+    <input type="hidden" name="category" value="Travel">
+
+    <input type="number" name="amount" class="form-control mb-2" placeholder="Amount (₹)" required>
+    <input type="date" name="date" class="form-control mb-2" required>
+    <input type="text" name="note" class="form-control mb-2" placeholder="Note">
+    <button type="submit" class="btn btn-danger w-100">Save Expense</button>
+
+                    </form>
+                </div>
+
+                <div id="form-expense-rent" class="form-section" style="display: none;">
+                    <h5>🏠 Add Expense - Rent</h5>
+                    <form method="post">
+    {% csrf_token %}
+                        
+    <input type="hidden" name="transaction_type" value="Expense">
+    <input type="hidden" name="category" value="Rent">
+
+    <input type="number" name="amount" class="form-control mb-2" placeholder="Amount (₹)" required>
+    <input type="date" name="date" class="form-control mb-2" required>
+    <input type="text" name="note" class="form-control mb-2" placeholder="Note">
+    <button type="submit" class="btn btn-danger w-100">Save Expense</button>
+
+                    </form>
+                </div>
+
+                <div id="form-expense-entertainment" class="form-section" style="display: none;">
+                    <h5>🎬 Add Expense - Entertainment</h5>
+                  <form method="post">
+    {% csrf_token %}
+                        
+    <input type="hidden" name="transaction_type" value="Expense">
+    <input type="hidden" name="category" value="Entertainment">
+
+    <input type="number" name="amount" class="form-control mb-2" placeholder="Amount (₹)" required>
+    <input type="date" name="date" class="form-control mb-2" required>
+    <input type="text" name="note" class="form-control mb-2" placeholder="Note">
+    <button type="submit" class="btn btn-danger w-100">Save Expense</button>
+
+                    </form>
+                </div>
+            </div>
+
+            <!-- Income Tab -->
+            <div class="tab-pane fade" id="income" role="tabpanel">
+                <div class="row row-cols-2 row-cols-md-4 g-3">
+                    <div class="col">
+                        <div class="card bg-success category-card" onclick="toggleForm('form-income-salary')">
+                            <div class="category-icon">💼</div>
+                            <div>Salary</div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card bg-success category-card" onclick="toggleForm('form-income-bonus')">
+                            <div class="category-icon">🎁</div>
+                            <div>Bonus</div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card bg-success category-card" onclick="toggleForm('form-income-investment')">
+                            <div class="category-icon">📈</div>
+                            <div>Investment</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Income Forms -->
+                <div id="form-income-salary" class="form-section" style="display: none;">
+                    <h5>💼 Add Income - Salary</h5>
+                 <form method="post">
+    {% csrf_token %}
+                        
+    <input type="hidden" name="transaction_type" value="Income">
+    <input type="hidden" name="category" value="Salary">
+
+    <input type="number" name="amount" class="form-control mb-2" placeholder="Amount (₹)" required>
+    <input type="date" name="date" class="form-control mb-2" required>
+    <input type="text" name="note" class="form-control mb-2" placeholder="Note">
+    <button type="submit" class="btn btn-danger w-100">Save Expense</button>
+
+                    </form>
+                </div>
+
+                <div id="form-income-bonus" class="form-section" style="display: none;">
+                    <h5>🎁 Add Income - Bonus</h5>
+                   <form method="post">
+    {% csrf_token %}
+                        <input type="hidden" name="transaction_type" value="Income">
+    <input type="hidden" name="category" value="Bonus">
+
+    <input type="number" name="amount" class="form-control mb-2" placeholder="Amount (₹)" required>
+    <input type="date" name="date" class="form-control mb-2" required>
+    <input type="text" name="note" class="form-control mb-2" placeholder="Note">
+    <button type="submit" class="btn btn-danger w-100">Save Expense</button>
+                    </form>
+                </div>
+
+                <div id="form-income-investment" class="form-section" style="display: none;">
+                    <h5>📈 Add Income - Investment</h5>
+                   <form method="post">
+    {% csrf_token %}
+                        <input type="hidden" name="transaction_type" value="Income">
+    <input type="hidden" name="category" value="Investment">
+
+    <input type="number" name="amount" class="form-control mb-2" placeholder="Amount (₹)" required>
+    <input type="date" name="date" class="form-control mb-2" required>
+    <input type="text" name="note" class="form-control mb-2" placeholder="Note">
+    <button type="submit" class="btn btn-danger w-100">Save Expense</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Transfer Tab -->
+            <div class="tab-pane fade" id="transfer" role="tabpanel">
+                <div class="row row-cols-2 row-cols-md-4 g-3">
+                    <div class="col">
+                        <div class="card bg-info category-card" onclick="toggleForm('form-transfer-bank')">
+                            <div class="category-icon">🏦</div>
+                            <div>Bank Transfer</div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card bg-info category-card" onclick="toggleForm('form-transfer-wallet')">
+                            <div class="category-icon">💳</div>
+                            <div>Wallet</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transfer Forms -->
+                <div id="form-transfer-bank" class="form-section" style="display: none;">
+                    <h5>🏦 Transfer - Bank</h5>
+                  <form method="post">
+    {% csrf_token %}
+                        
+    <input type="hidden" name="transaction_type" value="Transfer">
+    <input type="hidden" name="category" value="Bank">
+
+    <input type="number" name="amount" class="form-control mb-2" placeholder="Amount (₹)" required>
+    <input type="date" name="date" class="form-control mb-2" required>
+    <input type="text" name="note" class="form-control mb-2" placeholder="Note">
+    <button type="submit" class="btn btn-danger w-100">Transfer</button>
+
+                    </form>
+                </div>
+
+                <div id="form-transfer-wallet" class="form-section" style="display: none;">
+                    <h5>💳 Transfer - Wallet</h5>
+                   <form method="post">
+    {% csrf_token %}
+                        
+    <input type="hidden" name="transaction_type" value="Transfer">
+    <input type="hidden" name="category" value="Wallet">
+
+    <input type="number" name="amount" class="form-control mb-2" placeholder="Amount (₹)" required>
+    <input type="date" name="date" class="form-control mb-2" required>
+    <input type="text" name="note" class="form-control mb-2" placeholder="Note">
+    <button type="submit" class="btn btn-danger w-100">Save Expense</button>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card shadow mt-5 p-3 mb-4 bg-body rounded">
+            <div class="row">
+                <h3 class="mb-3 text-primary">📊 Monthly Expense Overview</h3>
+
+                <!-- Filter Section -->
+                <div class="filter-section">
+                    <input type="text" id="searchInput" class="form-control w-auto" placeholder="🔍 Search expense">
+                    <select id="categoryFilter" class="form-select w-auto">
+                        {% for cat in categories %}
+        <option value="{{ cat }}">{{ cat }}</option>
+    {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Current Month -->
+                <div class="col-12">
+                    <div class="month-title"><b>📌 Current Month Expenses</b></div>
+                    <table class="table table-striped table-bordered mt-2 expense-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th onclick="sortTable(0, this)">Expense ⬍</th>
+                                <th onclick="sortTable(1, this)">Amount ⬍</th>
+                                <th>Category</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+    {% for exp in transactions %}
+    <tr>
+        <td>{{ exp.transaction_type }}</td>
+        <td>₹{{ exp.amount }}</td>
+        <td>{{ exp.category }}</td>
+        <td>{{ exp.date }}</td>
+        <td>
+            <button class="btn btn-sm btn-warning"
+            onclick="openEditModal('{{ expense.id }}', '{{ expense.name }}', '{{ expense.amount }}', '{{ expense.category }}', '{{ expense.date|date:'Y-m-d' }}')">
+      Edit
+    </button>
+    <button class="btn btn-sm btn-danger"
+            onclick="openDeleteModal('{{ expense.id }}')">
+      Delete
+    </button>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
+
+                        <tfoot>
+                            <tr class="table-secondary">
+                                <td colspan="5" id="totalCurrent">Total: ₹0</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+<!-- Edit Expense Modal -->
+<div class="modal fade" id="editModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Edit Expense</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" id="editExpenseForm">
+          {% csrf_token %}
+          <input type="hidden" name="expense_id" id="editExpenseId">
+
+          <div class="mb-3">
+            <label>Expense Name</label>
+            <input type="text" name="name" class="form-control" id="editName">
+          </div>
+
+          <div class="mb-3">
+            <label>Amount</label>
+            <input type="number" name="amount" class="form-control" id="editAmount">
+          </div>
+
+          <div class="mb-3">
+            <label>Category</label>
+            <select name="category" class="form-control" id="editCategory">
+              {% for cat in categories %}
+                <option value="{{ cat }}">{{ cat }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label>Date</label>
+            <input type="date" name="date" class="form-control" id="editDate">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-primary" type="submit" form="editExpenseForm">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">Delete Expense</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete this expense? This action cannot be undone.
+      </div>
+      <div class="modal-footer">
+        <form method="post" id="deleteExpenseForm">
+          {% csrf_token %}
+          <input type="hidden" name="expense_id" id="deleteExpenseId">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-danger" type="submit">Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+        
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleForm(formId) {
+            const form = document.getElementById(formId);
+            const isVisible = form.style.display === 'block';
+            document.querySelectorAll('.form-section').forEach(f => f.style.display = 'none');
+            form.style.display = isVisible ? 'none' : 'block';
+            if (!isVisible) {
+                window.scrollTo({ top: form.offsetTop - 80, behavior: 'smooth' });
+            }
+        }
+
+
+      // Search & Filter
+document.getElementById("searchInput").addEventListener("keyup", filterTable);
+document.getElementById("categoryFilter").addEventListener("change", filterTable);
+
+function filterTable() {
+    let searchValue = document.getElementById("searchInput").value.toLowerCase();
+    let categoryValue = document.getElementById("categoryFilter").value;
+
+    document.querySelectorAll(".expense-table tbody tr").forEach(row => {
+        let expense = row.cells[0].innerText.toLowerCase();
+        let category = row.cells[2].innerText;
+        let show = true;
+
+        if (!expense.includes(searchValue)) show = false;
+        if (categoryValue && category !== categoryValue) show = false;
+
+        row.style.display = show ? "" : "none";
+    });
+}
+
+// Sort table
+function sortTable(columnIndex, thElement) {
+    let table = thElement.closest("table");
+    let rows = Array.from(table.tBodies[0].rows);
+
+    // Toggle ascending/descending
+    let ascending = thElement.getAttribute("data-asc") !== "true";
+
+    rows.sort((a, b) => {
+        let valA = a.cells[columnIndex].innerText.replace("₹", "").trim();
+        let valB = b.cells[columnIndex].innerText.replace("₹", "").trim();
+
+        // Convert to numbers if possible
+        let numA = parseFloat(valA);
+        let numB = parseFloat(valB);
+
+        if (!isNaN(numA) && !isNaN(numB)) {
+            return ascending ? numA - numB : numB - numA;
+        } else {
+            return ascending ? valA.localeCompare(valB) : valB.localeCompare(valA);
+        }
+    });
+
+    thElement.setAttribute("data-asc", ascending);
+
+    // Re-append sorted rows
+    rows.forEach(row => table.tBodies[0].appendChild(row));
+}
+
+function openEditModal(id, name, amount, category, date) {
+    document.getElementById("editExpenseId").value = id;
+    document.getElementById("editName").value = name;
+    document.getElementById("editAmount").value = amount;
+    document.getElementById("editCategory").value = category;
+    document.getElementById("editDate").value = date;
+    new bootstrap.Modal(document.getElementById("editModal")).show();
+  }
+
+  function openDeleteModal(id) {
+    document.getElementById("deleteExpenseId").value = id;
+    new bootstrap.Modal(document.getElementById("deleteModal")).show();
+  }
+
+    </script>
+
+{% endblock %}

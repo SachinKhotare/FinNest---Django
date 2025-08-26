@@ -1,0 +1,191 @@
+{% extends "Tenant/base.html" %}
+{% block title %}Rent Payment History - My Site{% endblock %}
+
+{% block content %}
+<h2 class="text-center mb-4">🏠 Rent Payment History</h2>
+
+<!-- Summary Section -->
+<div class="row text-center mb-4">
+  <div class="col-md-4">
+    <div class="summary-card">
+      <h5>Total Paid</h5>
+      <p class="text-success fw-bold" id="totalPaid">₹0</p>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="summary-card">
+      <h5>Pending Months</h5>
+      <p class="text-warning fw-bold" id="pendingMonths">{{ pending_months }}</p>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="summary-card">
+      <h5>Overdue Count</h5>
+      <p class="text-danger fw-bold" id="overdueCount">0</p>
+    </div>
+  </div>
+</div>
+
+<!-- Search & Filter -->
+<div class="d-flex flex-wrap gap-2 mb-3">
+  <input type="text" id="searchInput" class="form-control search-box" placeholder="Search month, method, or amount">
+  <select id="statusFilter" class="form-select search-box">
+    <option value="">All Status</option>
+    <option value="SUCCESS">Paid</option>
+    <option value="PENDING">Pending</option>
+    <option value="FAILED">Failed</option>
+  </select>
+  <input type="date" id="fromDate" class="form-control search-box" placeholder="From Date">
+  <input type="date" id="toDate" class="form-control search-box" placeholder="To Date">
+  <button class="btn btn-success" onclick="exportTableToCSV()">Export CSV</button>
+</div>
+
+<!-- Table -->
+<div class="card shadow">
+  <div class="card-body">
+    <h5 class="card-title">Rent Payment Records</h5>
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover" id="paymentTable">
+        <thead class="table-dark">
+          <tr>
+            <th>Month</th>
+            <th>Amount</th>
+            <th>Paid On</th>
+            <th>Payment Method</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for txn in rent_history %}
+          <tr>
+            <td>{{ txn.month }}</td>
+            <td>₹{{ txn.amount }}</td>
+            <td>{% if txn.status == "SUCCESS" %}{{ txn.created_at|date:"Y-m-d" }}{% else %}—{% endif %}</td>
+            <td>Razorpay</td>
+            <td>{{ txn.status }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="text-center">No payments yet.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+function updateSummary() {
+  let rows = document.querySelectorAll('#paymentTable tbody tr');
+  let totalPaid = 0, pending = 0, overdue = 0;
+
+  rows.forEach(row => {
+    let amount = parseInt(row.cells[1].textContent.replace(/[₹,]/g, "")) || 0;
+    let status = row.cells[4].textContent.trim();
+    if (status === "SUCCESS") {
+      totalPaid += amount;
+    } else if (status === "PENDING") {
+     
+      overdue++;
+    } else if (status === "FAILED") {
+      overdue++;
+    }
+  });
+
+  document.getElementById('totalPaid').textContent = `₹${totalPaid.toLocaleString()}`;
+  //document.getElementById('pendingMonths').textContent = pending;
+  document.getElementById('overdueCount').textContent = overdue;
+}
+
+function highlightText(cell, searchValue) {
+  const regex = new RegExp(`(${searchValue})`, 'gi');
+  cell.innerHTML = cell.textContent.replace(regex, '<span class="highlight">$1</span>');
+}
+
+document.getElementById('searchInput').addEventListener('keyup', filterTable);
+document.getElementById('statusFilter').addEventListener('change', filterTable);
+document.getElementById('fromDate').addEventListener('change', filterTable);
+document.getElementById('toDate').addEventListener('change', filterTable);
+
+function filterTable() {
+  let searchValue = document.getElementById('searchInput').value.toLowerCase();
+  let statusValue = document.getElementById('statusFilter').value;
+  let fromDate = document.getElementById('fromDate').value;
+  let toDate = document.getElementById('toDate').value;
+
+  let rows = document.querySelectorAll('#paymentTable tbody tr');
+  rows.forEach(row => {
+    row.querySelectorAll('td').forEach(cell => cell.innerHTML = cell.textContent); // reset
+    let month = row.cells[0].textContent.toLowerCase();
+    let amount = row.cells[1].textContent.toLowerCase();
+    let paidOn = row.cells[2].textContent.trim();
+    let method = row.cells[3].textContent.toLowerCase();
+    let status = row.cells[4].textContent.trim();
+
+    let matchesSearch = !searchValue || month.includes(searchValue) || method.includes(searchValue) || amount.includes(searchValue);
+    let matchesStatus = !statusValue || status === statusValue;
+    let matchesDate = true;
+
+    if (fromDate && paidOn !== "—" && new Date(paidOn) < new Date(fromDate)) matchesDate = false;
+    if (toDate && paidOn !== "—" && new Date(paidOn) > new Date(toDate)) matchesDate = false;
+
+    if (matchesSearch && matchesStatus && matchesDate) {
+      row.style.display = '';
+      if (searchValue) {
+        row.querySelectorAll('td').forEach(cell => {
+          if (cell.textContent.toLowerCase().includes(searchValue)) {
+            highlightText(cell, searchValue);
+          }
+        });
+      }
+    } else {
+      row.style.display = 'none';
+    }
+  });
+
+  updateSummary();
+}
+
+// Table Sorting
+document.querySelectorAll('#paymentTable th').forEach((header, index) => {
+  header.addEventListener('click', () => {
+    let table = header.closest('table');
+    let tbody = table.querySelector('tbody');
+    let rows = Array.from(tbody.querySelectorAll('tr'));
+    let ascending = header.classList.toggle('asc');
+
+    rows.sort((a, b) => {
+      let textA = a.cells[index].textContent.trim();
+      let textB = b.cells[index].textContent.trim();
+      return ascending
+        ? textA.localeCompare(textB, undefined, { numeric: true })
+        : textB.localeCompare(textA, undefined, { numeric: true });
+    });
+    tbody.innerHTML = '';
+    rows.forEach(row => tbody.appendChild(row));
+  });
+});
+
+// Export to CSV
+function exportTableToCSV() {
+  let rows = document.querySelectorAll("#paymentTable tr");
+  let csv = [];
+  rows.forEach(row => {
+    let cols = row.querySelectorAll("td, th");
+    let rowData = [];
+    cols.forEach(col => rowData.push(col.innerText));
+    csv.push(rowData.join(","));
+  });
+  let csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+  let link = document.createElement("a");
+  link.download = "rent_payment_history.csv";
+  link.href = window.URL.createObjectURL(csvFile);
+  link.click();
+}
+
+// Initialize summary
+updateSummary();
+
+</script>
+{% endblock %}

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>💰 Personal Finance Manager</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .category-card {
+      color: white;
+      text-align: center;
+      padding: 20px;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .category-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0px 4px 15px rgba(0,0,0,0.15);
+    }
+    .category-icon {
+      font-size: 2rem;
+      margin-bottom: 5px;
+    }
+    .form-section {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 15px;
+      border: 1px solid #dee2e6;
+    }
+    .nav-tabs .nav-link.active {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container py-4">
+  <h2 class="mb-4 text-center">💼 Personal Finance Manager</h2>
+
+  <!-- Tabs -->
+  <ul class="nav nav-tabs mb-3" id="financeTabs" role="tablist">
+    <li class="nav-item">
+      <button class="nav-link active" id="expenses-tab" data-bs-toggle="tab" data-bs-target="#expenses" type="button">Expenses</button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" id="income-tab" data-bs-toggle="tab" data-bs-target="#income" type="button">Income</button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" id="transfer-tab" data-bs-toggle="tab" data-bs-target="#transfer" type="button">Transfers</button>
+    </li>
+  </ul>
+
+  <!-- Tab Content -->
+  <div class="tab-content">
+
+    <!-- Expenses Tab -->
+    <div class="tab-pane fade show active" id="expenses" role="tabpanel">
+      <div class="row row-cols-2 row-cols-md-4 g-3">
+        <div class="col">
+          <div class="card bg-danger category-card" onclick="toggleForm('form-expense-food')">
+            <div class="category-icon">🍔</div>
+            <div>Food</div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card bg-primary category-card" onclick="toggleForm('form-expense-travel')">
+            <div class="category-icon">✈️</div>
+            <div>Travel</div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card bg-warning text-dark category-card" onclick="toggleForm('form-expense-rent')">
+            <div class="category-icon">🏠</div>
+            <div>Rent</div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card bg-success category-card" onclick="toggleForm('form-expense-entertainment')">
+            <div class="category-icon">🎬</div>
+            <div>Entertainment</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expense Forms -->
+      <div id="form-expense-food" class="form-section" style="display: none;">
+        <h5>🍔 Add Expense - Food</h5>
+        <form>
+          <input type="number" class="form-control mb-2" placeholder="Amount (₹)">
+          <input type="date" class="form-control mb-2">
+          <input type="text" class="form-control mb-2" placeholder="Note">
+          <button class="btn btn-danger w-100">Save Expense</button>
+        </form>
+      </div>
+
+      <div id="form-expense-travel" class="form-section" style="display: none;">
+        <h5>✈️ Add Expense - Travel</h5>
+        <form>
+          <input type="number" class="form-control mb-2" placeholder="Amount (₹)">
+          <input type="date" class="form-control mb-2">
+          <input type="text" class="form-control mb-2" placeholder="Note">
+          <button class="btn btn-primary w-100">Save Expense</button>
+        </form>
+      </div>
+
+      <div id="form-expense-rent" class="form-section" style="display: none;">
+        <h5>🏠 Add Expense - Rent</h5>
+        <form>
+          <input type="number" class="form-control mb-2" placeholder="Amount (₹)">
+          <input type="date" class="form-control mb-2">
+          <input type="text" class="form-control mb-2" placeholder="Note">
+          <button class="btn btn-warning w-100">Save Expense</button>
+        </form>
+      </div>
+
+      <div id="form-expense-entertainment" class="form-section" style="display: none;">
+        <h5>🎬 Add Expense - Entertainment</h5>
+        <form>
+          <input type="number" class="form-control mb-2" placeholder="Amount (₹)">
+          <input type="date" class="form-control mb-2">
+          <input type="text" class="form-control mb-2" placeholder="Note">
+          <button class="btn btn-success w-100">Save Expense</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Income Tab -->
+    <div class="tab-pane fade" id="income" role="tabpanel">
+      <div class="row row-cols-2 row-cols-md-4 g-3">
+        <div class="col">
+          <div class="card bg-success category-card" onclick="toggleForm('form-income-salary')">
+            <div class="category-icon">💼</div>
+            <div>Salary</div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card bg-success category-card" onclick="toggleForm('form-income-bonus')">
+            <div class="category-icon">🎁</div>
+            <div>Bonus</div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card bg-success category-card" onclick="toggleForm('form-income-investment')">
+            <div class="category-icon">📈</div>
+            <div>Investment</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Income Forms -->
+      <div id="form-income-salary" class="form-section" style="display: none;">
+        <h5>💼 Add Income - Salary</h5>
+        <form>
+          <input type="number" class="form-control mb-2" placeholder="Amount (₹)">
+          <input type="date" class="form-control mb-2">
+          <input type="text" class="form-control mb-2" placeholder="Note">
+          <button class="btn btn-success w-100">Save Income</button>
+        </form>
+      </div>
+
+      <div id="form-income-bonus" class="form-section" style="display: none;">
+        <h5>🎁 Add Income - Bonus</h5>
+        <form>
+          <input type="number" class="form-control mb-2" placeholder="Amount (₹)">
+          <input type="date" class="form-control mb-2">
+          <input type="text" class="form-control mb-2" placeholder="Note">
+          <button class="btn btn-success w-100">Save Income</button>
+        </form>
+      </div>
+
+      <div id="form-income-investment" class="form-section" style="display: none;">
+        <h5>📈 Add Income - Investment</h5>
+        <form>
+          <input type="number" class="form-control mb-2" placeholder="Amount (₹)">
+          <input type="date" class="form-control mb-2">
+          <input type="text" class="form-control mb-2" placeholder="Note">
+          <button class="btn btn-success w-100">Save Income</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Transfer Tab -->
+    <div class="tab-pane fade" id="transfer" role="tabpanel">
+      <div class="row row-cols-2 row-cols-md-4 g-3">
+        <div class="col">
+          <div class="card bg-info category-card" onclick="toggleForm('form-transfer-bank')">
+            <div class="category-icon">🏦</div>
+            <div>Bank Transfer</div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card bg-info category-card" onclick="toggleForm('form-transfer-wallet')">
+            <div class="category-icon">💳</div>
+            <div>Wallet</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transfer Forms -->
+      <div id="form-transfer-bank" class="form-section" style="display: none;">
+        <h5>🏦 Transfer - Bank</h5>
+        <form>
+          <input type="number" class="form-control mb-2" placeholder="Amount (₹)">
+          <input type="date" class="form-control mb-2">
+          <input type="text" class="form-control mb-2" placeholder="Note">
+          <button class="btn btn-info w-100">Transfer</button>
+        </form>
+      </div>
+
+      <div id="form-transfer-wallet" class="form-section" style="display: none;">
+        <h5>💳 Transfer - Wallet</h5>
+        <form>
+          <input type="number" class="form-control mb-2" placeholder="Amount (₹)">
+          <input type="date" class="form-control mb-2">
+          <input type="text" class="form-control mb-2" placeholder="Note">
+          <button class="btn btn-info w-100">Transfer</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  function toggleForm(formId) {
+    const form = document.getElementById(formId);
+    const isVisible = form.style.display === 'block';
+    document.querySelectorAll('.form-section').forEach(f => f.style.display = 'none');
+    form.style.display = isVisible ? 'none' : 'block';
+    if (!isVisible) {
+      window.scrollTo({ top: form.offsetTop - 80, behavior: 'smooth' });
+    }
+  }
+</script>
+
+</body>
+</html>

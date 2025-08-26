@@ -1,0 +1,395 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FinNest - Smart Finance Hub</title>
+  <link rel="icon" type="image/x-icon" href="{% static 'Images/Logo.ico' %}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{% static 'CSS/Home-style.css' %}">
+
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-custom ">
+    <div class="container">
+      <a class="navbar-brand text-white d-flex align-items-center" href="#">
+        <img src="{% static 'Images/Logo.png' %}" width="30" height="30" class="me-2">
+        <strong>FinNest</strong>
+      </a>
+      <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon text-white"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto gap-2">
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#">About Us</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+ <section class="hero py-5">
+  <div class="container text-center">
+    <h1 class="mb-3">Welcome to FinNest</h1>
+    <p class="mb-4">Your one-stop solution for personal finance, rentals, and smart investments.</p>
+    
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+      <a href="#" class="btn btn-outline-glass btn-lg" data-bs-toggle="modal" data-bs-target="#signupModal">Get Started</a>
+      <a href="#" class="btn btn-outline-glass btn-lg" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
+    </div>
+  </div>
+</section>
+
+
+  <main class="container">
+    <!-- Benefits Section -->
+    <section class="text-center py-5">
+      <div class="container">
+        <h2 class="fw-bold mb-4">🌟 Why Choose FinNest?</h2>
+        <div class="row g-4">
+          <div class="col-md-3 col-6">
+            <div class="p-4 bg-light rounded shadow-sm h-100">
+              <div class="fs-2">🔐</div>
+              <h6 class="mt-3 fw-semibold">100% Secure</h6>
+              <p class="text-muted small">Bank-grade encryption to protect your data.</p>
+            </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div class="p-4 bg-light rounded shadow-sm h-100">
+              <div class="fs-2">🤖</div>
+              <h6 class="mt-3 fw-semibold">Smart AI Tracking</h6>
+              <p class="text-muted small">AI-powered tools to auto-categorize and analyze.</p>
+            </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div class="p-4 bg-light rounded shadow-sm h-100">
+              <div class="fs-2">📊</div>
+              <h6 class="mt-3 fw-semibold">Personalized Insights</h6>
+              <p class="text-muted small">Get tailored financial tips based on your goals.</p>
+            </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div class="p-4 bg-light rounded shadow-sm h-100">
+              <div class="fs-2">🏠</div>
+              <h6 class="mt-3 fw-semibold">Easy Rent Collection</h6>
+              <p class="text-muted small">Track tenant payments and send digital receipts.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Redesigned Features Section -->
+    <section class="text-center py-3 ">
+      <div class="container">
+        <h2 class="fw-bold mb-4">🚀 Key Features</h2>
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="p-4 bg-white rounded shadow-sm h-100">
+              <div class="text-primary fs-1"><i class="bi bi-cash-coin"></i></div>
+              <h5 class="mt-3 fw-semibold">Track Expenses</h5>
+              <p class="text-muted">Smart dashboards to analyze your spending patterns.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="p-4 bg-white rounded shadow-sm h-100">
+              <div class="text-success fs-1"><i class="bi bi-house-door-fill"></i></div>
+              <h5 class="mt-3 fw-semibold">Rental Management</h5>
+              <p class="text-muted">Manage tenants, payments, and rent receipts seamlessly.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="p-4 bg-white rounded shadow-sm h-100">
+              <div class="text-warning fs-1"><i class="bi bi-graph-up-arrow"></i></div>
+              <h5 class="mt-3 fw-semibold">Investment Growth</h5>
+              <p class="text-muted">Track mutual funds, SIPs, and stocks in one place.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- Stats -->
+    <section class="py-5 text-center">
+      <div class="container">
+        <h2 class="fw-bold mb-4">📊 Our Impact in Numbers</h2>
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="p-4 bg-white rounded shadow-sm h-100">
+              <div class="mb-3 text-primary fs-2"><i class="bi bi-people-fill"></i></div>
+              <h3 class="fw-bold">10K+</h3>
+              <p class="text-muted">Users Trust Us</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="p-4 bg-white rounded shadow-sm h-100">
+              <div class="mb-3 text-success fs-2"><i class="bi bi-wallet-fill"></i></div>
+              <h3 class="fw-bold">₹25Cr+</h3>
+              <p class="text-muted">Managed Funds</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="p-4 bg-white rounded shadow-sm h-100">
+              <div class="mb-3 text-warning fs-2"><i class="bi bi-star-fill"></i></div>
+              <h3 class="fw-bold">95%</h3>
+              <p class="text-muted">Customer Satisfaction</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reviews -->
+    <section class="container my-2">
+      <div class="text-center mb-4">
+        <h2 class="fw-bold">🗣️ What Users Say</h2>
+        <!--<p class="text-muted">Real feedback from real FinNest users.</p>-->
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="p-4 bg-white rounded shadow-sm h-100">
+            <div class="d-flex align-items-center mb-3">
+              <img src="https://i.pravatar.cc/50?img=12" class="rounded-circle me-3" alt="Priya Sharma">
+              <div>
+                <h6 class="mb-0">Priya Sharma</h6>
+                <small class="text-muted">Freelancer</small>
+              </div>
+            </div>
+            <p class="mb-0">"Amazing platform for tracking everything! It’s made managing my finances super easy."</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-4 bg-white rounded shadow-sm h-100">
+            <div class="d-flex align-items-center mb-3">
+              <img src="https://i.pravatar.cc/50?img=33" class="rounded-circle me-3" alt="Rahul Verma">
+              <div>
+                <h6 class="mb-0">Rahul Verma</h6>
+                <small class="text-muted">Startup Founder</small>
+              </div>
+            </div>
+            <p class="mb-0">"Clean UI, smart features. Loving it! FinNest is a must-have for modern households."</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-4 bg-white rounded shadow-sm h-100">
+            <div class="d-flex align-items-center mb-3">
+              <img src="https://i.pravatar.cc/50?img=47" class="rounded-circle me-3" alt="Meena Kulkarni">
+              <div>
+                <h6 class="mb-0">Meena Kulkarni</h6>
+                <small class="text-muted">Home Manager</small>
+              </div>
+            </div>
+            <p class="mb-0">"Feels like a personal finance assistant! I finally feel in control of rent and bills."</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="my-3 py-5 ">
+      <div class="container text-center">
+        <h2 class="fw-bold mb-4">💳 Pricing Plans</h2>
+        <div class="row g-4 justify-content-center">
+          <!-- Starter Plan -->
+          <div class="col-md-4">
+            <div class="card pricing-card shadow-sm border-0 h-100">
+              <div class="card-body">
+                <h5 class="card-title fw-bold text-primary">Starter</h5>
+                <h6 class="card-subtitle mb-3 text-muted">₹0 /mo</h6>
+                <ul class="list-unstyled mb-4">
+                  <li>✔️ Basic Tools</li>
+                  <li>✔️ Track Expenses</li>
+                  <li>✔️ Rent Reminders</li>
+                </ul>
+                <button class="btn btn-outline-primary w-100">Start Free</button>
+              </div>
+            </div>
+          </div>
+          <!-- Pro Plan -->
+          <div class="col-md-4">
+            <div class="card pricing-card shadow border-2 border-primary h-100">
+              <div class="card-body">
+                <h5 class="card-title fw-bold text-primary">Pro</h5>
+                <h6 class="card-subtitle mb-3 text-muted">₹499 /mo</h6>
+                <ul class="list-unstyled mb-4">
+                  <li>✔️ All Starter Features</li>
+                  <li>✔️ Smart Insights</li>
+                  <li>✔️ AI Budget Advisor</li>
+                </ul>
+                <button class="btn btn-primary w-100">Upgrade to Pro</button>
+              </div>
+            </div>
+          </div>
+          <!-- Enterprise Plan -->
+          <div class="col-md-4">
+            <div class="card pricing-card shadow-sm border-0 h-100">
+              <div class="card-body">
+                <h5 class="card-title fw-bold text-primary">Enterprise</h5>
+                <h6 class="card-subtitle mb-3 text-muted">Custom</h6>
+                <ul class="list-unstyled mb-4">
+                  <li>✔️ All Pro Features</li>
+                  <li>✔️ Priority Support</li>
+                  <li>✔️ Custom Integrations</li>
+                </ul>
+                <button class="btn btn-outline-primary w-100">Contact Sales</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="my-3 py-3">
+      <div class="container">
+        <h2 class="fw-bold text-center mb-4">🧠 Frequently Asked Questions</h2>
+        <div class="accordion accordion-flush" id="faqAccordion">
+          <!-- Question 1 -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="faqHeading1">
+              <button class="accordion-button fw-semibold" type="button" data-bs-toggle="collapse"
+                data-bs-target="#faqCollapse1" aria-expanded="true" aria-controls="faqCollapse1">
+                Is FinNest free?
+              </button>
+            </h2>
+            <div id="faqCollapse1" class="accordion-collapse collapse show" aria-labelledby="faqHeading1"
+              data-bs-parent="#faqAccordion">
+              <div class="accordion-body">Yes! You can get started for free with basic features like expense tracking
+                and reminders.</div>
+            </div>
+          </div>
+          <!-- Question 2 -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="faqHeading2">
+              <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse"
+                data-bs-target="#faqCollapse2" aria-expanded="false" aria-controls="faqCollapse2">
+                Can I track rent & SIPs?
+              </button>
+            </h2>
+            <div id="faqCollapse2" class="accordion-collapse collapse" aria-labelledby="faqHeading2"
+              data-bs-parent="#faqAccordion">
+              <div class="accordion-body">Absolutely! FinNest is designed to help you manage rent, SIPs, and other
+                recurring payments with ease.</div>
+            </div>
+          </div>
+          <!-- Question 3 -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="faqHeading3">
+              <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse"
+                data-bs-target="#faqCollapse3" aria-expanded="false" aria-controls="faqCollapse3">
+                Is my data secure?
+              </button>
+            </h2>
+            <div id="faqCollapse3" class="accordion-collapse collapse" aria-labelledby="faqHeading3"
+              data-bs-parent="#faqAccordion">
+              <div class="accordion-body">Yes, your data is protected with bank-grade encryption and 100% secure storage
+                practices.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center py-4">
+    <div class="container">
+      <p>© 2025 FinNest. All rights reserved.</p>
+      <p><a href="#">Privacy Policy</a> | <a href="#">Terms</a> | <a href="#">Contact</a></p>
+    </div>
+  </footer>
+
+  <!-- LOGIN MODAL -->
+<div class="modal fade" id="loginModal" tabindex="-1">
+  <div class="modal-dialog">
+    <form class="modal-content" style="background: linear-gradient(135deg, #1d3557, #457b9d); color: white;">
+      <div class="modal-header border-0">
+        <h5 class="modal-title">Login to FinNest</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="email" class="form-control mb-3" placeholder="Email" required>
+        <input type="password" class="form-control mb-2" placeholder="Password" required>
+
+        <!-- Reduced margin here -->
+        <div class="text-end mt-1 mb-2">
+          <a href="#" class="text-light text-decoration-underline" style="font-size: 0.9rem;">Forgot Password?</a>
+        </div>
+      </div>
+
+      <!-- Reduced gap here -->
+      <div class="modal-footer border-0 justify-content-center gap-1">
+        <button type="submit" class="btn btn-outline-light">Login</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+  <!-- SIGNUP MODAL -->
+  <div class="modal fade" id="signupModal" tabindex="-1">
+    <div class="modal-dialog">
+      <form class="modal-content" style="background: linear-gradient(135deg, #1d3557, #457b9d); color: white;">
+        <div class="modal-header border-0">
+          <h5 class="modal-title">Create Your FinNest Account</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" class="form-control mb-3" placeholder="Username" required>
+          <input type="text" class="form-control mb-3" placeholder="Full Name" required>
+          <input type="email" class="form-control mb-3" placeholder="Email" required>
+          <input type="password" class="form-control mb-3" placeholder="Password" required>
+          <input type="password" class="form-control mb-3" placeholder="Confirm Password" required>
+          <input type="tel" class="form-control mb-3" placeholder="Mobile Number" required>
+          <input type="date" class="form-control mb-3" placeholder="Date of Birth" required>
+
+          <select class="form-control mb-3" required>
+            <option value="" disabled selected>Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+
+          <textarea class="form-control mb-3" placeholder="Address" rows="2" required></textarea>
+
+          <div class="mb-3">
+            <label for="profilePic" class="form-label">Profile Picture</label>
+            <input type="file" class="form-control" id="profilePic" accept="image/*">
+          </div>
+
+          <select class="form-control mb-3" required>
+            <option value="" disabled selected>Account Type</option>
+            <option value="personal">Personal</option>
+            <option value="business">Business</option>
+          </select>
+        </div>
+        <div class="modal-footer border-0 d-flex justify-content-center">
+          <button class="btn btn-outline-light w-45" type="submit">Sign Up</button>
+          <button type="button" class="btn btn-secondary w-45" data-bs-dismiss="modal">Cancel</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+ 
+</body>
+
+</html>

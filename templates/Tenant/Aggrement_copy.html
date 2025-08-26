@@ -1,0 +1,100 @@
+{% extends "Tenant/base.html" %}
+{% block title %}Dashboard - My Site{% endblock %}
+
+{% block content %}
+
+  <!-- Title & Search -->
+  <div class="text-center mb-4">
+    <h2 class="fw-bold"><i class="bi bi-folder2-open"></i> Tenant Documents</h2>
+    <p class="text-muted">View and download your important documents anytime.</p>
+  </div>
+  <div class="search-bar">
+    <input type="text" id="searchInput" class="form-control" placeholder="Search documents...">
+  </div>
+
+  <div class="row justify-content-center g-4" id="documentList">
+
+    <!-- Agreement Copy -->
+    <div class="col-md-5 doc-item" data-title="agreement">
+      <div class="card shadow doc-card text-center">
+        <img src="{{ tenant_data.agreement_file.url }}" alt="Agreement Preview" class="doc-preview">
+        <div class="card-body">
+          <h5 class="card-title fw-bold">Agreement Copy</h5>
+          <p class="text-muted small">Uploaded on: 12 Aug 2025 | Size: 1.2MB</p>
+          <div class="d-flex justify-content-center gap-2">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agreementModal">
+              <i class="bi bi-eye-fill"></i> View
+            </button>
+            <a href="{{ tenant_data.agreement_file.url }}" download class="btn btn-success">
+              <i class="bi bi-download"></i> Download
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Aadhaar Card Copy -->
+    <div class="col-md-5 doc-item" data-title="aadhaar">
+      <div class="card shadow doc-card text-center">
+        <img src="{{ tenant_data.aadhar_photo.url }}" alt="Aadhaar Preview" class="doc-preview">
+        <div class="card-body">
+          <h5 class="card-title fw-bold">Aadhaar Card Copy</h5>
+          <p class="text-muted small">Uploaded on: 10 Aug 2025 | Size: 450KB</p>
+          <div class="d-flex justify-content-center gap-2">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#aadhaarModal">
+              <i class="bi bi-eye-fill"></i> View
+            </button>
+            <a href="{{ tenant_data.aadhar_photo.url }}" download class="btn btn-success">
+              <i class="bi bi-download"></i> Download
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+<!-- Agreement Modal -->
+<div class="modal fade" id="agreementModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Agreement Document</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img src="{{ tenant_data.agreement_file.url }}" class="img-fluid rounded" alt="Agreement Copy">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Aadhaar Modal -->
+<div class="modal fade" id="aadhaarModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Aadhaar Card Copy</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img src="{{ tenant_data.aadhar_photo.url }}" class="img-fluid rounded" alt="Aadhaar Card Copy">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Simple search filter
+  document.getElementById('searchInput').addEventListener('keyup', function() {
+    let filter = this.value.toLowerCase();
+    document.querySelectorAll('.doc-item').forEach(function(card) {
+      let title = card.getAttribute('data-title');
+      card.style.display = title.includes(filter) ? '' : 'none';
+    });
+  });
+</script>
+{% endblock %}

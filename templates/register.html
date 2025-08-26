@@ -1,0 +1,172 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign Up - FinNest</title>
+  <link rel="icon" type="image/x-icon" href="{% static 'Images/Logo.ico' %}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+      color: #1d3557;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .signup-card {
+      background: #ffffff;
+      border: 2px solid #1d3557;
+      border-radius: 20px;
+      padding: 40px;
+      width: 100%;
+      max-width: 820px;
+      box-shadow: 0 10px 25px rgba(29, 53, 87, 0.15);
+    }
+
+    .form-control {
+      background-color: #f1f1f1;
+      color: #1d3557;
+      border: none;
+    }
+
+    .form-control::placeholder {
+      color: #888;
+    }
+
+    label {
+      color: #1d3557;
+    }
+
+    .btn-outline-dark {
+      border-color: #1d3557;
+      color: #1d3557;
+    }
+
+    .btn-outline-dark:hover {
+      background-color: #1d3557;
+      color: #fff;
+    }
+
+    .logo img {
+      width: 40px;
+      height: 40px;
+    }
+
+    a {
+      color: #1d3557;
+    }
+
+    a:hover {
+      color: #457b9d;
+    }
+
+    #paymentButton {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="signup-card">
+    <div class="text-center mb-4">
+      <div class="logo d-flex justify-content-center align-items-center gap-2">
+        <img src="{% static 'Images/Logo.png' %}" alt="FinNest Logo">
+        <h4 class="fw-bold mb-0">FinNest</h4>
+      </div>
+      <h5 class="mt-3">Create Your Account</h5>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Username</label>
+          <input type="text" class="form-control" placeholder="Choose a username" name="username" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-control" placeholder="Enter your full name" name="full_name" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" placeholder="Enter your email" name="email" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Mobile Number</label>
+          <input type="tel" class="form-control" placeholder="e.g. 9876543210" name="mobile_no" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control" placeholder="Create a password" name="password1" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Confirm Password</label>
+          <input type="password" class="form-control" placeholder="Re-enter your password" name="password2" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Date of Birth</label>
+          <input type="date" class="form-control" name="date_of_birth" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Gender</label>
+          <select class="form-control" name="gender" required>
+            <option value="" disabled selected>Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="col-md-12">
+          <label class="form-label">Address</label>
+          <textarea class="form-control" rows="2" placeholder="Your address" name="address" required></textarea>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Profile Picture</label>
+          <input type="file" class="form-control" name="profile_pic" accept="image/*">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Account Type</label>
+          <select class="form-control" id="accountType" name="account_type" required>
+            <option value="" disabled selected>Select account type</option>
+            <option value="personal">Personal</option>
+            <option value="business">Business</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="text-center mt-4 d-grid gap-2">
+        <button type="submit" class="btn btn-outline-dark">Sign Up</button>
+        <button type="button" class="btn btn-outline-primary" id="paymentButton">Proceed to Payment</button>
+        <a href="login.html" class="mt-2 d-block">Already have an account? Login</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const accountType = document.getElementById('accountType');
+    const paymentButton = document.getElementById('paymentButton');
+
+    accountType.addEventListener('change', function () {
+      if (this.value === 'business') {
+        paymentButton.style.display = 'block';
+      } else {
+        paymentButton.style.display = 'none';
+      }
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
