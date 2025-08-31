@@ -273,10 +273,10 @@
   <div class="sidebar">
     <h2>FinNest</h2>
    
-    <a href="{% url 'dashboard_view' %}" class="nav-link">🏠 Aggrement Copy</a>   
-    <a href="{% url 'pay_rent' %}" class="nav-link">💸 Pay Rent</a>
-    <a href="{% url 'Rent_History' %}" class="nav-link">🏠 Rent History</a>
-    <a href="{% url 'raise-issue' %}" class="nav-link">📊 Raise Issue & Vacate Notice</a>
+    <a href="{% url 'dashboard_view' %}" class="nav-link">🏠 Documents</a>   
+    <a href="{% url 'pay_rent' %}" class="nav-link">💸 Payment</a>
+    <a href="{% url 'Rent_History' %}" class="nav-link">🏠 History</a>
+    <a href="{% url 'raise-issue' %}" class="nav-link">📊 Issue & Notice</a>
     <a href="{% url 'tenant_logout' %}" class="nav-link">🚪 Logout</a>
   </div>
 
@@ -324,17 +324,22 @@
   </div>
 
   <!-- Sidebar: Notifications & Suggestions -->
-  <div class="offcanvas offcanvas-end" tabindex="-1" id="notificationSidebar">
-    <div class="offcanvas-header">
-      <h5 class="offcanvas-title">Notifications & Suggestions</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-    </div>
-    <div class="offcanvas-body">
-      <div class="alert alert-warning">⚠️ Your electricity bill is due tomorrow.</div>
-      <div class="alert alert-info">🔔 You received ₹2,000 from tenant Ramesh.</div>
-      <div class="alert alert-success">💡 Consider setting up an emergency fund for financial stability.</div>
+<div class="offcanvas offcanvas-end" tabindex="-1" id="notificationSidebar">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Notifications & Suggestions</h5>
+    <button class="btn btn-outline-dark btn-sm ms-2" 
+        data-bs-toggle="offcanvas" 
+        data-bs-target="#notificationSidebar">
+  <i class="bi bi-bell-fill"></i>
+</button>
+  </div>
+  <div class="offcanvas-body">
+    <!-- Notifications will be loaded here dynamically -->
+    <div id="notificationsContainer">
+      <div class="alert alert-info">Loading notifications...</div>
     </div>
   </div>
+</div>
 
   <!-- Modal: Profile -->
   <div class="modal fade" id="profileModal" tabindex="-1">
@@ -370,6 +375,9 @@
       const popup = document.getElementById("pageAlert");
       popup.style.display = "none";
     }
+
+  
+
   </script>
 </body>
 </html>

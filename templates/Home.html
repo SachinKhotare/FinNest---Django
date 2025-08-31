@@ -27,7 +27,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto gap-2">
           <li class="nav-item">
-            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
+            <a class="nav-link" href="{% url 'login' %}">Login</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#">About Us</a>
@@ -44,8 +44,8 @@
     <p class="mb-4">Your one-stop solution for personal finance, rentals, and smart investments.</p>
     
     <div class="d-flex justify-content-center gap-3 flex-wrap">
-      <a href="#" class="btn btn-outline-glass btn-lg" data-bs-toggle="modal" data-bs-target="#signupModal">Get Started</a>
-      <a href="#" class="btn btn-outline-glass btn-lg" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
+      <a href="{% url 'register' %}" class="btn btn-outline-glass btn-lg" >Get Started</a>
+      <a href="{% url 'login' %}" class="btn btn-outline-glass btn-lg" >Login</a>
     </div>
   </div>
 </section>

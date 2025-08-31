@@ -11,6 +11,12 @@ class RaiseIssue(models.Model):
         ('Resolved', 'Resolved'),
     ]
 
+    OWNER_STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Acknowledged', 'Acknowledged'),
+        ('Resolved by Owner', 'Resolved by Owner'),
+    ]
+
     tenant = models.ForeignKey(
         Tenant,
         on_delete=models.CASCADE,
@@ -23,6 +29,7 @@ class RaiseIssue(models.Model):
     details = models.TextField(blank=True)
     image = models.ImageField(upload_to='issue_images/', null=True, blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    owner_status = models.CharField(max_length=30, choices=OWNER_STATUS_CHOICES, default='Pending')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -33,12 +40,19 @@ class RaiseIssue(models.Model):
 # Vacate submit notice
 
 class VacateNotice(models.Model):
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Approved', 'Approved'),
+        ('Rejected', 'Rejected'),
+    ]
     tenant = models.OneToOneField(Tenant, on_delete=models.CASCADE, related_name="vacate_notice")  
     name = models.CharField(max_length=255)
     flat_no = models.CharField(max_length=50)
     date = models.DateField(auto_now_add=True)   # Auto-filled when submitted
     reason = models.TextField()
-
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="Pending")
+    rejection_reason = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return f"Vacate Notice - {self.name} ({self.flat_no})"
     
@@ -58,3 +72,6 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"{self.tenant.username} - {self.month} - {self.status}"
+    
+
+    

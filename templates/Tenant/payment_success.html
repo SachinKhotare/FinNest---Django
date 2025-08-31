@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "Tenant/base.html" %}
 {% load static %}
 
 {% block content %}
@@ -12,7 +12,7 @@
             <p><b>Payment ID:</b> {{ payment_id }}</p>
         {% endif %}
 
-        <a href="{% url 'owner-rental' %}" class="btn btn-primary mt-3">Back to Dashboard</a>
+        <a href="{% url 'dashboard_view' %}" class="btn btn-primary mt-3">Back to Dashboard</a>
     </div>
 </div>
 {% endblock %}

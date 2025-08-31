@@ -11,7 +11,8 @@ urlpatterns = [
     path("logout/", views.tenant_logout, name="tenant_logout"),
     path("Pay_Rent/", views.payment, name="pay_rent"),
     path('payment-success/', views.payment_success, name="payment_success"),
-    path('Rent_History/', views.rent_history,name="Rent_History")
-   
+    path('Rent_History/', views.rent_history,name="Rent_History"),
+    
+
     
 ]

@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Goals{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <!-- ✅ Floating Toast Notification -->
+  <div id="popupAlert" 
+       class="alert text-center fw-bold shadow-lg rounded-pill px-4 py-2"
+       style="display:none; position: fixed; top: 20px; right: 20px; z-index: 1050; min-width: 250px;">
+  </div>
+
+  <!-- Dashboard Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-primary">🎯 My Savings Goals</h2>
+    <span class="badge bg-gradient text-black px-3 py-2 shadow-sm">Updated {{ goals|length }} Goals</span>
+  </div>
+
+  <!-- Add Goal Card -->
+<div class="row mb-2">
+  <div class="col-md-6 d-flex justify-content-start mb-2">
+    <h5 class="fw-bold">
+      <button type="button" class="btn btn-success" 
+              data-bs-toggle="modal" data-bs-target="#addGoalModal">➕ Add a New Goal</button>
+    </h5>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addGoalModal" tabindex="-1" aria-labelledby="addGoalModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 shadow-lg">
+      
+      <!-- Modal Header -->
+      <div class="modal-header bg-light">
+        <h5 class="modal-title fw-bold" id="addGoalModalLabel">➕ Add a New Goal</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <!-- Modal Body with Form -->
+      <div class="modal-body">
+        <form id="add-goal-form" method="POST" class="row g-3">
+          <input type="hidden" name="action" value="add_goal">
+          {{ form.as_p }}
+          <div class="col-12">
+            <button type="submit" class="btn btn-success rounded-pill px-4 shadow-sm">
+              <i class="bi bi-plus-circle"></i> Add Goal
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+  <!-- Goals Table -->
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body">
+      <table class="table align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Goal</th>
+            <th>Target</th>
+            <th>Saved</th>
+            <th style="width: 25%">Progress</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="goal-table-body">
+          {% for goal in goals %}
+          <tr id="goal-row-{{ goal.id }}">
+            <td class="fw-semibold">{{ goal.goal_name }}</td>
+            <td class="text-muted">₹{{ goal.target_amount }}</td>
+            <td id="saved-{{ goal.id }}" class="fw-bold">₹{{ goal.saved_amount }}</td>
+            <td>
+              <div class="progress rounded-pill shadow-sm" style="height: 20px;">
+                <div class="progress-bar 
+                            {% if goal.progress >= 100 %}bg-success 
+                            {% elif goal.progress > 50 %}bg-info 
+                            {% else %}bg-warning{% endif %}" 
+                     role="progressbar"
+                     style="width: {{ goal.progress }}%; font-size: 0.8rem;">
+                  {{ goal.progress }}%
+                </div>
+              </div>
+            </td>
+            <td id="status-{{ goal.id }}">
+              {% if goal.status == "✅ Achieved" %}
+                <span class="badge bg-success px-3 py-2">Achieved</span>
+              {% else %}
+                <span class="badge bg-warning text-dark px-3 py-2">In Progress</span>
+              {% endif %}
+            </td>
+            <td class="d-flex align-items-center" style="gap:8px;">
+              <!-- Add Money Form -->
+              <form class="add-money-form d-flex flex-grow-1" method="POST" style="gap:5px;">
+                <input type="hidden" name="action" value="add_money">
+                <input type="hidden" name="goal_id" value="{{ goal.id }}">
+                <input type="number" name="amount" 
+                       class="form-control form-control-sm rounded-pill shadow-sm" 
+                       placeholder="₹ Amount" required>
+                <button type="submit" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm">
+                  💰 Add
+                </button>
+              </form>
+
+              <!-- Delete Goal Button -->
+              <button class="btn btn-danger btn-sm rounded-pill shadow-sm delete-goal-btn" 
+                      data-id="{{ goal.id }}" title="Delete Goal">
+                ❌
+              </button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+function showPopup(message, isSuccess = true) {
+  let popup = document.getElementById("popupAlert");
+  popup.innerHTML = message;
+  popup.className = "alert fw-bold shadow-lg rounded-pill px-4 py-2 " 
+                    + (isSuccess ? "alert-success" : "alert-danger");
+  popup.style.display = "block";
+  setTimeout(() => { popup.style.display = "none"; }, 3000);
+}
+
+// ✅ Add Goal Ajax
+document.getElementById("add-goal-form").addEventListener("submit", function(e){
+  e.preventDefault();
+  fetch("{% url 'goal_handler' %}", {
+    method: "POST",
+    body: new FormData(this),
+    headers: {"X-CSRFToken": "{{ csrf_token }}"}
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.success){
+      showPopup(data.message, true);
+      location.reload(); // reload to reflect
+    } else {
+      showPopup(data.message, false);
+    }
+  });
+});
+
+// ✅ Add Money Ajax with max limit check
+document.querySelectorAll(".add-money-form").forEach(form => {
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    let currentForm = this;
+    let goalRow = currentForm.closest("tr");
+    let savedAmount = parseFloat(goalRow.querySelector(`#saved-${goalRow.id.split('-')[2]}`).innerText.replace('₹',''));
+    let targetAmount = parseFloat(goalRow.querySelector("td:nth-child(2)").innerText.replace('₹',''));
+    let addAmount = parseFloat(currentForm.querySelector("input[name='amount']").value);
+
+    if(savedAmount >= targetAmount){
+      showPopup("Goal already achieved! ✅ Cannot add more.", false);
+      currentForm.querySelector("input[name='amount']").value = "";
+      return;
+    }
+
+    if(savedAmount + addAmount > targetAmount){
+      addAmount = targetAmount - savedAmount; // only add remaining
+    }
+
+    let formData = new FormData(currentForm);
+    formData.set("amount", addAmount); // update form data with corrected amount
+
+    fetch("{% url 'goal_handler' %}", {
+      method: "POST",
+      body: formData,
+      headers: {"X-CSRFToken": "{{ csrf_token }}"}
+    })
+    .then(res => res.json())
+    .then(data => {
+      if(data.success){
+        showPopup(data.message, true);
+
+        // ✅ Update saved amount
+        document.getElementById("saved-" + data.goal.id).innerText = "₹" + data.goal.saved_amount;
+
+        // ✅ Update progress bar dynamically
+        let progressBar = document.querySelector("#goal-row-" + data.goal.id + " .progress-bar");
+        progressBar.style.width = data.goal.progress + "%";
+        progressBar.innerText = data.goal.progress + "%";
+
+        // ✅ Update progress bar color
+        progressBar.classList.remove("bg-success", "bg-info", "bg-warning");
+        if (data.goal.progress >= 100) {
+          progressBar.classList.add("bg-success");
+        } else if (data.goal.progress > 50) {
+          progressBar.classList.add("bg-info");
+        } else {
+          progressBar.classList.add("bg-warning");
+        }
+
+        // ✅ Update status badge
+        document.getElementById("status-" + data.goal.id).innerHTML = 
+          (data.goal.status === "✅ Achieved" ? 
+           '<span class="badge bg-success px-3 py-2">Achieved</span>' : 
+           '<span class="badge bg-warning text-dark px-3 py-2">In Progress</span>');
+
+        // ✅ Clear input
+        currentForm.querySelector("input[name='amount']").value = "";
+      } else {
+        showPopup(data.message, false);
+      }
+    });
+  });
+});
+
+
+// ✅ Delete Goal Ajax
+document.querySelectorAll(".delete-goal-btn").forEach(btn => {
+  btn.addEventListener("click", function(){
+    let goalId = this.getAttribute("data-id");
+
+    if (!confirm("⚠️ Are you sure you want to delete this goal?")) return;
+
+    fetch("{% url 'goal_handler' %}", {
+      method: "POST",
+      body: new URLSearchParams({
+        action: "delete_goal",
+        goal_id: goalId
+      }),
+      headers: {"X-CSRFToken": "{{ csrf_token }}"}
+    })
+    .then(res => res.json())
+    .then(data => {
+      if(data.success){
+        showPopup(data.message, true);
+
+        // ✅ Remove row instantly
+        document.getElementById("goal-row-" + goalId).remove();
+      } else {
+        showPopup(data.message, false);
+      }
+    });
+  });
+});
+</script>
+{% endblock %}

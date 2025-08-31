@@ -1,5 +1,5 @@
 from django import forms
-from .models import Tenant, AddStock,AddSIP, Transaction
+from .models import Tenant, AddStock,AddSIP, Transaction, SavingsGoal
 
 class TenantForm(forms.ModelForm):
     class Meta:
@@ -66,3 +66,15 @@ class TransactionForm(forms.ModelForm):
     class Meta:
         model = Transaction
         fields = ['amount', 'transaction_type', 'category', 'date', 'note']
+
+#saving goal tracker
+
+class SavingsGoalForm(forms.ModelForm):
+    class Meta:
+        model = SavingsGoal
+        fields = ["goal_name", "target_amount", "saved_amount"]
+        widgets = {
+            "goal_name": forms.TextInput(attrs={"class": "form-control", "placeholder": "Goal Name"}),
+            "target_amount": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Target Amount"}),
+            "saved_amount": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Initial Saved Amount (optional)"}),
+        }

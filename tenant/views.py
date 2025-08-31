@@ -9,6 +9,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, timedelta
 import calendar
+from django.conf import settings
+from django.core.mail import send_mail
 
 
 
@@ -214,6 +216,7 @@ def payment_success(request):
     order_id = request.GET.get("order_id")
     signature = request.GET.get("signature")
     month = request.GET.get("month")  # from JS
+    email_receipt = request.GET.get("emailReceipt")  # ✅ fetch checkbox value
 
     # ✅ Create or update payment
     payment_obj, created = Payment.objects.get_or_create(
@@ -234,6 +237,16 @@ def payment_success(request):
         payment_obj.status = "SUCCESS"
         payment_obj.month = month
         payment_obj.save()
+
+    # ✅ Send email if checkbox was checked
+    if email_receipt == "on":  
+        send_mail(
+            "Rent Paid Successfully",
+            f"Hello {tenant.name},\n\nYou have successfully paid your rent.\n\nRent Month: {order_id}\nPayment ID: {payment_id}\nMonth: {month}\nAmount: {tenant.monthly_rent}\n\nThank you for your payment.",
+            settings.EMAIL_HOST_USER,
+            ["Sachinkhotare.5@gmail.com"],  # send only to tenant
+            fail_silently=False,
+        )
 
     return render(request, "Tenant/payment_success.html", {
         "tenant": tenant,
@@ -266,4 +279,6 @@ def rent_history(request):
         "rent_history": payments,
         "pending_months": pending_months
     })
+
+#notifications
 

@@ -12,13 +12,7 @@ from .models import CustomUser
 def home(request):
     return render(request, 'home.html')  # Or 'core/home.html' or wherever your file is
 
-def rentals_view(request):
-    # Sample data – this can be replaced with data from a database
-    rentals = [
-        {'property': 'Apartment A', 'tenant': 'Rahul Mehta', 'rent': 12000, 'due': '2025-08-10'},
-        {'property': 'Apartment B', 'tenant': 'Sonia Patel', 'rent': 15000, 'due': '2025-08-15'},
-    ]
-    return render(request, 'rentals.html', {'rentals': rentals})
+
 
 #login
 def user_login(request):
@@ -81,9 +75,7 @@ def user_login(request):
         }
     )
 
-#@login_required
-def dashboard(request):
-    return render(request, 'dashboard.html')
+
 
 def user_logout(request):
     logout(request)

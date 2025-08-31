@@ -16,8 +16,8 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h4 class="fw-semibold text-gradient">👥 Tenant Management</h4>
   <div>
-    <button class="btn-modern me-2" data-bs-toggle="modal" data-bs-target="#addTenantModal">➕ Add Tenant</button>
-    <button class="btn btn-danger rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#deleteTenantModal">🗑 Delete Tenant</button>
+    <button class="btn btn-success shadow-sm" data-bs-toggle="modal" data-bs-target="#addTenantModal">➕ Add Tenant</button>
+    <button class="btn btn-danger shadow-sm" data-bs-toggle="modal" data-bs-target="#deleteTenantModal">🗑 Delete Tenant</button>
   </div>
 </div>
 
@@ -143,13 +143,13 @@
 
 <!-- Agreement -->
 <div id="agreementSection" class="card glass-card mt-4" style="display:none;">
-  <div class="card-header bg-gradient text-white fw-bold" style="background: linear-gradient(135deg,#6366f1,#14b8a6);">
+  <div class="card-header bg-gradient text-black fw-bold" style="background: linear-gradient(135deg,#6366f1,#14b8a6);">
     📑 Agreement Details
   </div>
   <div class="card-body">
     <p id="agreementDetails"></p>
-    <button class="btn-modern btn-sm me-2" id="agreementCopyBtn">📄 Agreement Copy</button>
-    <button class="btn btn-warning btn-sm rounded-pill" data-bs-toggle="modal" data-bs-target="#aadharModal" id="viewAadharBtn">🆔 View Aadhaar</button>
+    <button class="btn btn-success btn-sm" id="agreementCopyBtn">📄 Agreement Copy</button>
+    <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#aadharModal" id="viewAadharBtn">🆔 View Aadhaar</button>
   </div>
 </div>
 
@@ -170,8 +170,8 @@
 
 <!-- Rent Schedule -->
 <div id="rentTablediv" class="card shadow-sm mt-4" style="display:none;">
-  <div class="card-header bg-gradient text-white fw-bold" style="background: linear-gradient(135deg,#6366f1,#14b8a6);">
-    🏠 Rent Payment Schedule (11 Months)
+  <div class="card-header bg-gradient text-black fw-bold" style="background: linear-gradient(135deg,#6366f1,#14b8a6);">
+    🏠 Monthly Rent Tracker
   </div>
   <div class="card-body p-0">
     <table class="table table-hover align-middle mb-0" id="rentTable">
@@ -188,14 +188,20 @@
   </div>
 </div>
 
-<!-- Issues -->
 <div id="issuesSection" class="card glass-card mt-4" style="display:none;">
   <div class="card-header bg-danger text-white fw-bold">⚠️ Tenant Issues</div>
   <div class="card-body p-0">
     <table class="table table-striped align-middle mb-0">
       <thead class="table-light">
         <tr>
-          <th>ID</th><th>Title</th><th>Created At</th><th>Details</th><th>Status</th>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Category</th>
+          <th>Urgency</th>
+          <th>Details</th>
+          <th>Status</th>
+          <th>Owner Status</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody id="issuesTableBody"></tbody>
@@ -210,7 +216,7 @@
     <table class="table table-striped align-middle mb-0">
       <thead class="table-light">
         <tr>
-          <th>ID</th><th>Reason</th><th>Vacate Date</th><th>Created At</th><th>Status</th>
+          <th>ID</th><th>Reason</th><th>Vacate Date</th><th>Name</th><th>Status</th><th>Action</th>
         </tr>
       </thead>
       <tbody id="vacateTableBody"></tbody>
@@ -218,185 +224,283 @@
   </div>
 </div>
 
-<!-- ===== Extra Styles ===== -->
-<style>
-/* ===== Base Styles ===== */
-body {
-  font-family: 'Poppins', sans-serif;
-  background-color: #f9fafb;
-  color: #333;
-}
 
-/* Headings with subtle professional gradient */
-.text-gradient {
-  background: linear-gradient(90deg, #3b82f6, #14b8a6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 600;
-}
-
-/* Buttons */
-.btn-modern {
-  background: #3b82f6;
-  color: #fff !important;
-  border-radius: 8px;
-  padding: 0.5rem 1.2rem;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  border: none;
-}
-.btn-modern:hover {
-  background: #2563eb;
-  transform: translateY(-1px);
-}
-.btn-danger,
-.btn-secondary {
-  border-radius: 8px;
-}
-
-/* Cards */
-.glass-card {
-  background: #fff !important;
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-/* Modal */
-.modal-content {
-  border-radius: 10px;
-}
-
-/* Table */
-.table {
-  font-size: 0.9rem;
-}
-.table thead {
-  background-color: #f1f5f9;
-  font-weight: 600;
-}
-.table-hover tbody tr:hover {
-  background-color: #f9fafb;
-}
-
-/* Popup Overlay */
-.popup-overlay {
-  position: fixed; top:0; left:0; right:0; bottom:0;
-  background: rgba(0,0,0,0.35);
-  z-index: 1055;
-}
-.popup-box {
-  background: #fff;
-  border-radius: 10px;
-  padding: 1.8rem;
-  max-width: 380px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-.popup-box h4 {
-  font-weight: 600;
-  color: #2563eb;
-}
-.popup-box p {
-  color: #6b7280;
-  font-size: 0.9rem;
-}
-</style>
-
-
-<!-- ===== Scripts (same logic) ===== -->
+<!-- ===== Scripts (updated into OLD structure) ===== -->
 <script>
-document.getElementById("tenantName").addEventListener("change", function() {
-  let tenantId = this.value;
-  if (tenantId) {
-    fetch(`/api/agreement/${tenantId}/`)
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById("agreementDetails").innerHTML =
-          `<strong>Rent:</strong> ₹${data.rent} | 
-           <strong>Period:</strong> ${data.start_date} to ${data.end_date} | 
-           <strong>Contact:</strong> ${data.contact} | 
-           <strong>Address:</strong> ${data.address}`;
+document.addEventListener("DOMContentLoaded", function () {
+  const startDateInput = document.querySelector("input[name='start_date']");
+  const endDateInput = document.querySelector("input[name='end_date']");
 
-        document.getElementById("agreementCopyBtn").onclick = () => {
-          if (data.agreement_file) window.open(data.agreement_file,"_blank");
-          else alert("No agreement file found!");
-        };
-        document.getElementById("aadharImage").src = data.aadhar_photo || "";
+  if (startDateInput && endDateInput) {
+    startDateInput.addEventListener("change", function () {
+      if (this.value) {
+        let startDate = new Date(this.value);
 
-        // Rent table
-        let tbody = document.querySelector("#rentTable tbody");
-        tbody.innerHTML = "";
-        const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-        let rentMap = {};
-        if (data.rent_records) {
-          data.rent_records.forEach(r => rentMap[r.month] = r);
+        // Add 11 months to start date
+        let endDate = new Date(startDate);
+        endDate.setMonth(endDate.getMonth() + 11);
+
+        // Fix overflow bug
+        if (endDate.getDate() !== startDate.getDate()) {
+          endDate.setDate(0); 
         }
-        let startDate = new Date(data.start_date);
-        let startMonth = startDate.getMonth(), startYear = startDate.getFullYear();
-        for (let i=0;i<11;i++) {
-          let mi = (startMonth+i)%12;
-          let year = startYear+Math.floor((startMonth+i)/12);
-          let monthYear = `${months[mi]} ${year}`;
-          let record = rentMap[monthYear];
-          let status = record ? record.status : "Not Paid";
-          let comment = record ? (record.comment||"") : "";
-          let amount = record ? record.amount : data.rent;
-          tbody.innerHTML += `
-            <tr>
-              <td>${monthYear}</td>
-              <td>₹${amount}</td>
-              <td>
-                <select class="form-select form-select-sm">
-                  <option value="Not Paid" ${status==="Not Paid"?"selected":""}>Not Paid</option>
-                  <option value="Paid" ${status==="SUCCESS"?"selected":""}>Paid</option>
-                </select>
-              </td>
-              <td><input type="text" class="form-control form-control-sm" value="${comment}"></td>
-            </tr>`;
-        }
-        document.getElementById("rentTablediv").style.display="block";
 
-        // Issues
-        let issuesBody=document.getElementById("issuesTableBody");
-        issuesBody.innerHTML="";
-        if (data.issues?.length>0){
-          data.issues.forEach(issue=>{
-            issuesBody.innerHTML+=`
-              <tr>
-                <td>${issue.id}</td><td>${issue.title}</td>
-                <td>${issue.created_at}</td><td>${issue.details||""}</td>
-                <td>${issue.status||""}</td>
-              </tr>`;
-          });
-          document.getElementById("issuesSection").style.display="block";
-        } else document.getElementById("issuesSection").style.display="none";
-
-        // Vacate Notices
-        let vacateBody=document.getElementById("vacateTableBody");
-        vacateBody.innerHTML="";
-        if (data.vacate_notices?.length>0){
-          data.vacate_notices.forEach(notice=>{
-            vacateBody.innerHTML+=`
-              <tr>
-                <td>${notice.id}</td><td>${notice.reason}</td>
-                <td>${notice.date}</td><td>${notice.created_at}</td>
-                <td>${notice.status}</td>
-              </tr>`;
-          });
-          document.getElementById("vacateSection").style.display="block";
-        } else document.getElementById("vacateSection").style.display="none";
-
-        document.getElementById("agreementSection").style.display="block";
-      })
-      .catch(err=>{
-        console.error("Error:",err);
-        alert("Unable to load tenant details.");
-      });
+        let year = endDate.getFullYear();
+        let month = String(endDate.getMonth() + 1).padStart(2, "0");
+        let day = String(endDate.getDate()).padStart(2, "0");
+        endDateInput.value = `${year}-${month}-${day}`;
+      }
+    });
   }
-});
+
+  // === Tenant Change (Load Agreements, Rents, Issues, Vacate Notices) ===
+  document.getElementById("tenantName").addEventListener("change", function() {
+    let tenantId = this.value;
+    if (tenantId) {
+      fetch(`/api/agreement/${tenantId}/`)
+        .then(response => response.json())
+        .then(data => {
+          // Agreement details
+          document.getElementById("agreementDetails").innerHTML =
+            `<strong>Rent:</strong> ₹${data.rent} | 
+             <strong>Period:</strong> ${data.start_date} to ${data.end_date} | 
+             <strong>Contact:</strong> ${data.contact} | 
+             <strong>Address:</strong> ${data.address}`;
+
+          document.getElementById("agreementCopyBtn").onclick = () => {
+            if (data.agreement_file) window.open(data.agreement_file,"_blank");
+            else alert("No agreement file found!");
+          };
+          document.getElementById("aadharImage").src = data.aadhar_photo || "";
+
+          // Rent table
+let tbody = document.querySelector("#rentTable tbody");
+tbody.innerHTML = "";
+
+const months = [
+  "January","February","March","April","May","June","July","August",
+  "September","October","November","December"
+];
+
+let rentMap = {};
+if (data.rent_records) {
+  data.rent_records.forEach(r => rentMap[r.month] = r);
+}
+
+let startDate = new Date(data.start_date);
+let startMonth = startDate.getMonth(), startYear = startDate.getFullYear();
+
+for (let i = 0; i < 11; i++) {
+  let mi = (startMonth + i) % 12;
+  let year = startYear + Math.floor((startMonth + i) / 12);
+  let monthYear = `${months[mi]} ${year}`;
+
+  let record = rentMap[monthYear];
+  let status = record ? record.status : "Not Paid";
+  let amount = record ? record.amount : data.rent;
+
+  // ✅ Auto-fill comment if paid
+  let comment = "";
+  if (record) {
+    if (status === "SUCCESS" || status === "Paid") {
+      
+      comment = `Received Rent`;
+    } else {
+      comment = record.comment || "";
+    }
+  }
+
+  tbody.innerHTML += `
+    <tr>
+      <td>${monthYear}</td>
+      <td>₹${amount}</td>
+      <td>
+      <select class="form-select form-select-sm" ${status==="SUCCESS" || status==="Paid" ? "disabled" : ""}>
+  <option value="Not Paid" ${status==="Not Paid"?"selected":""}>Not Paid</option>
+  <option value="Paid" ${status==="SUCCESS" || status==="Paid" ?"selected":""}>Paid</option>
+</select>
+
+      </td>
+      <td><input type="text" class="form-control form-control-sm" value="${comment}" ${status==="SUCCESS" || status==="Paid" ? "readonly" : ""}>
+</td>
+    </tr>`;
+}
+
+document.getElementById("rentTablediv").style.display = "block";
+
+
+          // === Issues Table ===
+          let issuesBody = document.getElementById("issuesTableBody");
+          issuesBody.innerHTML = "";
+          if (data.issues?.length > 0) {
+            data.issues.forEach(issue => {
+              issuesBody.innerHTML += `
+                <tr>
+                  <td>${issue.id}</td>
+                  <td>${issue.title}</td>
+                  <td>${issue.category || ""}</td>
+                  <td><span class="badge ${issue.urgency === "High" ? "bg-danger" : issue.urgency === "Medium" ? "bg-warning text-dark" : "bg-success"}">${issue.urgency}</span></td>
+                  <td>${issue.details || ""}</td>
+                  <td><span class="badge ${issue.status === "Resolved" ? "bg-success" : issue.status === "In Progress" ? "bg-primary" : "bg-secondary"}">${issue.status}</span></td>
+                  <td>${issue.owner_status || "Pending"}</td>
+                  <td>
+                    ${issue.status !== "Resolved" ? 
+                      `<button class="btn btn-sm btn-success" onclick="resolveIssue(${issue.id})">Resolve</button>` 
+                      : `<span class="text-muted">✔ Done</span>`}
+                  </td>
+                </tr>`;
+            });
+            document.getElementById("issuesSection").style.display = "block";
+          } else {
+            document.getElementById("issuesSection").style.display = "none";
+          }
+
+          // === Vacate Notices (Fixed logic for Approve/Reject) ===
+          let vacateBody=document.getElementById("vacateTableBody");
+          vacateBody.innerHTML="";
+          if (data.vacate_notices?.length>0){
+            data.vacate_notices.forEach(notice=>{
+              vacateBody.innerHTML+=`
+                <tr>
+                  <td>${notice.id}</td>
+                  <td>${notice.reason}</td>
+                  <td>${notice.date}</td>
+                  <td>${notice.name || ""}</td>
+                  <td id="status-${notice.id}">
+                    ${notice.status || "Pending"}
+                    ${notice.status === "Rejected" && notice.rejection_reason ? `<br><small class="text-danger">Reason: ${notice.rejection_reason}</small>` : ""}
+                  </td>
+                  <td>
+                    ${
+                      notice.status === "Approved"
+                        ? `<span class="badge bg-success">✅ Approved by Owner</span>`
+                        : notice.status === "Rejected"
+                          ? `<span class="badge bg-danger">❌ Rejected</span>`
+                          : `
+                            <button class="btn btn-sm btn-success" onclick="updateVacateStatus(${notice.id}, 'Approved')">Approve</button>
+                            <button class="btn btn-sm btn-danger" onclick="openRejectModal(${notice.id})">Reject</button>
+                          `
+                    }
+                  </td>
+                </tr>`;
+            });
+            document.getElementById("vacateSection").style.display="block";
+          } else {
+            document.getElementById("vacateSection").style.display="none";
+          }
+
+          document.getElementById("agreementSection").style.display="block";
+        })
+        .catch(err=>{
+          console.error("Error:",err);
+          alert("Unable to load tenant details.");
+        });
+    }
+  });
+}); // END DOMContentLoaded
+
+// === Function: Approve/Reject Vacate ===
+function updateVacateStatus(id, status, reason="") {
+  fetch(`/update-vacate-status/${id}/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    body: JSON.stringify({ status, reason })
+  })
+  .then(res => res.json())
+  .then(res => {
+    if(res.success){
+      let statusCell = document.getElementById(`status-${id}`);
+      if (status === "Approved") {
+        statusCell.innerHTML = `<span class="badge bg-success">✅ Approved by Owner</span>`;
+      } else if (status === "Rejected" && reason) {
+        statusCell.innerHTML = `❌ Rejected<br><small class="text-danger">Reason: ${reason}</small>`;
+      }
+    } else {
+      alert("Error: " + res.message);
+    }
+  });
+}
+
+// === Bootstrap Modal Rejection ===
+function openRejectModal(id) {
+  document.getElementById("rejectNoticeId").value = id;
+  document.getElementById("rejectReason").value = "";
+  let modal = new bootstrap.Modal(document.getElementById("rejectModal"));
+  modal.show();
+}
+
+function submitRejection() {
+  let id = document.getElementById("rejectNoticeId").value;
+  let reason = document.getElementById("rejectReason").value.trim();
+  if (!reason) {
+    alert("Please enter a reason for rejection.");
+    return;
+  }
+  updateVacateStatus(id, "Rejected", reason);
+  bootstrap.Modal.getInstance(document.getElementById("rejectModal")).hide();
+}
+
+// === Resolve Issue ===
+function resolveIssue(issueId) {
+  fetch(`/issues/${issueId}/resolve/`, {
+    method: "POST",
+    headers: { "X-CSRFToken": getCookie("csrftoken") }
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert(data.message);
+      location.reload();
+    } else {
+      alert("Error: " + data.message);
+    }
+  });
+}
+
+// === CSRF Helper ===
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    let cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
 function dismissPopup(){ document.getElementById("pageAlert").style.display="none"; }
 window.addEventListener("load",()=>{ document.getElementById("pageAlert").style.display="flex"; });
 </script>
+
+<!-- Reject Modal -->
+<div class="modal fade" id="rejectModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">Reject Vacate Notice</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="rejectNoticeId">
+        <div class="mb-3">
+          <label for="rejectReason" class="form-label">Reason for Rejection</label>
+          <textarea id="rejectReason" class="form-control" rows="3" placeholder="Enter reason"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-danger" onclick="submitRejection()">Reject</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

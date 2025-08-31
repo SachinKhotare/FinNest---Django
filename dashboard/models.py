@@ -1,5 +1,7 @@
 from django.db import models
 from accounts.models import CustomUser
+from django.conf import settings
+
 
 class Tenant(models.Model):
     name = models.CharField(max_length=255)
@@ -96,3 +98,47 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f"{self.transaction_type}: {self.category} - ₹{self.amount}"
+
+class ExpenseBudget(models.Model):
+    CATEGORY_CHOICES = [
+        ('Food', 'Food'),
+        ('Travel', 'Travel'),
+        ('Rent', 'Rent'),
+        ('Entertainment', 'Entertainment'),
+    ]
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    month = models.IntegerField()
+    year = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'category', 'month', 'year')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.category} Budget {self.month}/{self.year} - ₹{self.amount}"
+
+
+#Saving Goal Tracker
+
+
+class SavingsGoal(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    goal_name = models.CharField(max_length=255)
+    target_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    saved_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def progress(self):
+        if self.target_amount > 0:
+            return round((self.saved_amount / self.target_amount) * 100, 2)
+        return 0
+
+    @property
+    def status(self):
+        return "✅ Achieved" if self.saved_amount >= self.target_amount else "⏳ In Progress"
+
+    def __str__(self):
+        return f"{self.goal_name} ({self.user.username})"

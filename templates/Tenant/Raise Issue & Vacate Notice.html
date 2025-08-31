@@ -38,61 +38,60 @@
     </div>
   </div>
 
-  <!-- Tickets Table -->
-  <div class="card shadow border-0 mb-4">
-    <div class="card-body">
-      <h5 class="mb-3">Previous Tickets</h5>
-      <input type="text" id="searchTickets" class="form-control mb-3" placeholder="Search tickets...">
-      <div class="table-responsive">
-        <table class="table table-bordered table-hover align-middle">
-  <thead class="table-light">
-    <tr>
-      <th>ID</th>
-      <th>Title</th>
-      <th>Category</th>
-      <th>Urgency</th>
-      <th>Status</th>
-      <th>Resolution Date</th>
-    </tr>
-  </thead>
-  <tbody id="ticketTable">
-    {% for issue in issues %}
-      <tr>
-        <td>#{{ issue.id }}</td>
-        <td>{{ issue.title }}</td>
-        <td>{{ issue.category }}</td>
-        <td>
-          {% if issue.urgency == "Low" %}
-            <span class="badge bg-secondary">{{ issue.urgency }}</span>
-          {% elif issue.urgency == "Medium" %}
-            <span class="badge bg-info text-dark">{{ issue.urgency }}</span>
-          {% elif issue.urgency == "High" %}
-            <span class="badge bg-warning text-dark">{{ issue.urgency }}</span>
-          {% elif issue.urgency == "Critical" %}
-            <span class="badge bg-danger">{{ issue.urgency }}</span>
-          {% endif %}
-        </td>
-        <td>
-          {% if issue.status %}
-            <span class="badge bg-success">{{ issue.status }}</span>
-          {% else %}
-            <span class="badge bg-primary">Open</span>
-          {% endif %}
-        </td>
-        <td>{{ issue.estimated_resolution_date|default:"-" }}</td>
-      </tr>
-    {% empty %}
-      <tr>
-        <td colspan="6" class="text-center">No tickets found.</td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
+ <!-- Tickets Table -->
+<div class="card shadow border-0 mb-4">
+  <div class="card-body">
+    <h5 class="mb-3">Previous Tickets</h5>
+    <input type="text" id="searchTickets" class="form-control mb-3" placeholder="Search tickets...">
 
-      </div>
+    <!-- Scrollable Table (4 rows only) -->
+    <div class="table-responsive" style="max-height: 280px; overflow-y: auto;">
+      <table class="table table-bordered table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Urgency</th>
+            <th>Status</th>
+            <th>Resolution Date</th>
+          </tr>
+        </thead>
+        <tbody id="ticketTable">
+          {% for issue in issues %}
+            <tr>
+              <td>#{{ issue.id }}</td>
+              <td>{{ issue.title }}</td>
+              <td>{{ issue.category }}</td>
+              <td>
+                {% if issue.urgency == "Low" %}
+                  <span class="badge bg-secondary">{{ issue.urgency }}</span>
+                {% elif issue.urgency == "Medium" %}
+                  <span class="badge bg-info text-dark">{{ issue.urgency }}</span>
+                {% elif issue.urgency == "High" %}
+                  <span class="badge bg-warning text-dark">{{ issue.urgency }}</span>
+                {% elif issue.urgency == "Critical" %}
+                  <span class="badge bg-danger">{{ issue.urgency }}</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if issue.status %}
+                  <span class="badge bg-success">{{ issue.status }}</span>
+                {% else %}
+                  <span class="badge bg-primary">Open</span>
+                {% endif %}
+              </td>
+              <td>{{ issue.estimated_resolution_date|default:"-" }}</td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="6" class="text-center">No tickets found.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </div>
-
 </div>
 
 <!-- Vacate Notice Modal -->

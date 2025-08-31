@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'accounts',
     'dashboard',
     'tenant',
+    
 ]
 
 MIDDLEWARE = [
@@ -145,7 +146,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
-LOGIN_URL = '/login_page/'
+LOGIN_URL = '/login/'
 
 
 #Payment

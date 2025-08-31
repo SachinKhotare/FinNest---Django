@@ -1,12 +1,145 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
-  <h3>Graph Test</h3>
-  {{ graph|safe }}
+<div class="container">
 
-  <h3>📊 Stock Trend</h3>
-{{ graph_stock|safe }}
+  <!-- Summary Cards with % change badges -->
+  <div class="row g-2 mb-3">
+    <div class="col-lg-3 col-md-6 col-sm-12">
+      <div class="card shadow-sm text-center p-2 bg-light rounded-4">
+        <h6 class="text-secondary small">Tenants</h6>
+        <p id="tenantCount" class="h4 fw-bold mb-1">0</p>
+       
+      </div>
+    </div>
 
-<h3>📊 SIP Trend</h3>
-{{ graph_sip|safe }}
+    <div class="col-lg-3 col-md-6 col-sm-12">
+      <div class="card shadow-sm text-center p-2 bg-light rounded-4">
+        <h6 class="text-secondary small">Total Stock Value</h6>
+        <p id="totalStock" class="h4 fw-bold mb-1">0</p>
+        
+      </div>
+    </div>
 
+    <div class="col-lg-3 col-md-6 col-sm-12">
+      <div class="card shadow-sm text-center p-2 bg-light rounded-4">
+        <h6 class="text-secondary small">Total SIP</h6>
+        <p id="totalSIP" class="h4 fw-bold mb-1">0</p>
+    
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-12">
+      <div class="card shadow-sm text-center p-2 bg-light rounded-4">
+        <h6 class="text-secondary small">Total Expense</h6>
+        <p id="totalExpense" class="h4 fw-bold mb-1">0</p>
+              </div>
+    </div>
+  </div>
+
+  <!-- First row of charts: Stock, SIP, Expense by Category -->
+  <div class="row g-3 mb-3">
+    <div class="col-lg-4 col-md-12">
+      <div class="card shadow-sm p-2 rounded-4 h-100">
+        <h6 class="card-title text-center text-secondary small mb-1">Stock Portfolio</h6>
+        <canvas id="stockChart" height="200"></canvas>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-12">
+      <div class="card shadow-sm p-2 rounded-4 h-100">
+        <h6 class="card-title text-center text-secondary small mb-1">SIP Portfolio</h6>
+        <canvas id="sipChart" height="200"></canvas>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-12">
+      <div class="card shadow-sm p-2 rounded-4 h-100">
+        <h6 class="card-title text-center text-secondary small mb-1">Expense by Category</h6>
+        <canvas id="expenseCategoryChart" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Second row of charts: Monthly Expense Trend and Savings Goal Progress -->
+  <div class="row g-3">
+    <div class="col-lg-6 col-md-12">
+      <div class="card shadow-sm p-2 rounded-4 h-100">
+        <h6 class="card-title text-center text-secondary small mb-1">Monthly Expense Trend</h6>
+        <canvas id="expenseTrendChart" height="200"></canvas>
+      </div>
+    </div>
+
+    <div class="col-lg-6 col-md-12">
+      <div class="card shadow-sm p-2 rounded-4 h-100">
+        <h6 class="card-title text-center text-secondary small mb-1">Savings Goal Progress</h6>
+        <canvas id="goalProgressChart" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+let stockChart, sipChart, expenseCategoryChart, expenseTrendChart, goalProgressChart;
+
+function createCharts(data) {
+    if (stockChart) stockChart.destroy();
+    if (sipChart) sipChart.destroy();
+    if (expenseCategoryChart) expenseCategoryChart.destroy();
+    if (expenseTrendChart) expenseTrendChart.destroy();
+    if (goalProgressChart) goalProgressChart.destroy();
+
+    stockChart = new Chart(document.getElementById('stockChart'), {
+        type: 'pie',
+        data: { labels: data.stock_labels, datasets: [{ data: data.stock_values, backgroundColor: ['#4e73df','#1cc88a','#36b9cc','#f6c23e','#e74a3b'] }] }
+    });
+
+    sipChart = new Chart(document.getElementById('sipChart'), {
+        type: 'pie',
+        data: { labels: data.sip_labels, datasets: [{ data: data.sip_values, backgroundColor: ['#f6c23e','#1cc88a','#36b9cc','#4e73df','#e74a3b'] }] }
+    });
+
+    expenseCategoryChart = new Chart(document.getElementById('expenseCategoryChart'), {
+        type: 'doughnut',
+        data: { labels: data.categories, datasets: [{ data: data.category_sums, backgroundColor: ['#e74a3b','#36b9cc','#f6c23e','#1cc88a','#4e73df'] }] }
+    });
+
+    expenseTrendChart = new Chart(document.getElementById('expenseTrendChart'), {
+        type: 'line',
+        data: { labels: data.expense_trend_labels, datasets: [{ data: data.expense_trend_values, borderColor: '#4e73df', fill: false, tension: 0.3 }] }
+    });
+
+    goalProgressChart = new Chart(document.getElementById('goalProgressChart'), {
+        type: 'bar',
+        data: { labels: data.goal_labels, datasets: [{ label: 'Progress (%)', data: data.goal_progress, backgroundColor: '#1cc88a' }] },
+        options: { scales: { y: { beginAtZero: true, max: 100 } } }
+    });
+
+    $('#tenantCount').text(data.tenant_count);
+    $('#totalStock').text(data.total_stock_value);
+    $('#totalSIP').text(data.total_sip_value);
+    $('#totalExpense').text(data.total_expense);
+
+    function setBadge(id, value) {
+        let badge = $(id);
+        if (value > 0) badge.text(`+${value}%`).removeClass('bg-danger bg-secondary').addClass('bg-success');
+        else if (value < 0) badge.text(`${value}%`).removeClass('bg-success bg-secondary').addClass('bg-danger');
+        else badge.text(`0%`).removeClass('bg-success bg-danger').addClass('bg-secondary');
+    }
+
+    setBadge('#stockChange', data.stock_change_percent);
+    setBadge('#sipChange', data.sip_change_percent);
+    setBadge('#expenseChange', data.expense_change_percent);
+}
+
+function fetchDashboardData() {
+    $.ajax({ url: "{% url 'dashboard-data-api' %}", type: "GET", success: createCharts });
+}
+
+fetchDashboardData();
+setInterval(fetchDashboardData, 10000);
+</script>
 {% endblock %}

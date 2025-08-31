@@ -14,6 +14,7 @@ class CustomUser(AbstractUser):
     address = models.TextField()
     profile_pic = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
     account_type = models.CharField(max_length=20, choices=ACCOUNT_CHOICES)
+    email = models.EmailField(unique=True)
 
     def __str__(self):
         return self.username
